@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Canvas Announcement Generator</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #1e2d3d;
+    --navy-light: #2d3f52;
+    --accent: #4a90d9;
+    --accent-soft: #e8f2fb;
+    --success: #2d7a4f;
+    --success-soft: #e6f5ed;
+    --warning: #b45309;
+    --warning-soft: #fef3cd;
+    --danger: #b91c1c;
+    --danger-soft: #fde8e8;
+    --border: #dde3ea;
+    --text: #1a2533;
+    --text-mid: #4a5568;
+    --text-muted: #8896a5;
+    --bg: #f5f7fa;
+    --surface: #ffffff;
+    --radius: 10px;
+    --radius-sm: 6px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  header {
+    background: var(--navy);
+    padding: 20px 32px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .header-icon {
+    width: 36px; height: 36px;
+    background: var(--accent);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+
+  header h1 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #ffffff;
+    letter-spacing: -0.2px;
+  }
+
+  header p {
+    font-size: 12px;
+    color: #8a9fb5;
+    margin-top: 1px;
+  }
+
+  .main {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .card-header {
+    background: #f8fafc;
+    border-bottom: 1px solid var(--border);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .card-header .step {
+    width: 22px; height: 22px;
+    background: var(--navy);
+    color: #fff;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .card-header h2 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .card-header .badge {
+    margin-left: auto;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-muted);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: 2px 8px;
+    border-radius: 20px;
+  }
+
+  .card-body {
+    padding: 20px;
+  }
+
+  .field { margin-bottom: 16px; }
+  .field:last-child { margin-bottom: 0; }
+
+  label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-mid);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+
+  input[type="text"],
+  input[type="password"],
+  input[type="date"],
+  textarea,
+  select {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    background: #fff;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  input[type="text"]:focus,
+  input[type="password"]:focus,
+  input[type="date"]:focus,
+  textarea:focus,
+  select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(74,144,217,0.12);
+  }
+
+  input.mono {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+  }
+
+  .hint {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 5px;
+    line-height: 1.5;
+  }
+
+  .hint a { color: var(--accent); text-decoration: none; }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 130px;
+    line-height: 1.6;
+  }
+
+  .template-preview {
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    margin-top: 12px;
+  }
+
+  .template-preview .preview-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+
+  .tpl-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 8px;
+    align-items: flex-start;
+    font-size: 13px;
+  }
+
+  .tpl-day {
+    font-weight: 600;
+    color: var(--accent);
+    width: 28px;
+    flex-shrink: 0;
+    padding-top: 1px;
+  }
+
+  .tpl-msg {
+    color: var(--text-mid);
+    line-height: 1.5;
+  }
+
+  .announcement-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 320px;
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+
+  .ann-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: #fafbfc;
+    font-size: 13px;
+  }
+
+  .ann-date {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    padding-top: 2px;
+    width: 80px;
+    flex-shrink: 0;
+  }
+
+  .ann-title {
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+
+  .ann-body {
+    color: var(--text-mid);
+    line-height: 1.4;
+    font-size: 12px;
+  }
+
+  .day-tag {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .day-wed { background: #e8f0fe; color: #3b5cb8; }
+  .day-fri { background: #fef3e8; color: #b85c3b; }
+  .day-sat { background: #f3e8fe; color: #7c3bb8; }
+
+  .actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    padding: 10px 20px;
+    border-radius: var(--radius-sm);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+  }
+
+  .btn-primary {
+    background: var(--navy);
+    color: #fff;
+  }
+
+  .btn-primary:hover { background: var(--navy-light); }
+  .btn-primary:disabled { background: #a0adb8; cursor: not-allowed; }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--text-mid);
+    border: 1px solid var(--border);
+  }
+
+  .btn-outline:hover { background: var(--bg); }
+
+  .btn-danger {
+    background: var(--danger-soft);
+    color: var(--danger);
+    border: 1px solid #f5c6c6;
+  }
+
+  .count-note {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-left: auto;
+  }
+
+  .alert {
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    line-height: 1.5;
+    display: none;
+  }
+
+  .alert.show { display: block; }
+  .alert-success { background: var(--success-soft); color: var(--success); border: 1px solid #a7d4bb; }
+  .alert-danger { background: var(--danger-soft); color: var(--danger); border: 1px solid #f5c6c6; }
+  .alert-info { background: var(--accent-soft); color: #1a4f7a; border: 1px solid #b3d4f0; }
+  .alert-warning { background: var(--warning-soft); color: var(--warning); border: 1px solid #f5d78a; }
+
+  .progress-wrap {
+    display: none;
+    margin-top: 12px;
+  }
+
+  .progress-wrap.show { display: block; }
+
+  .progress-bar-bg {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    height: 8px;
+    overflow: hidden;
+    margin-bottom: 6px;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 20px;
+    transition: width 0.3s;
+    width: 0%;
+  }
+
+  .progress-text {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .toggle-pw {
+    position: relative;
+  }
+
+  .toggle-pw input { padding-right: 40px; }
+
+  .toggle-pw button {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-muted);
+    font-size: 13px;
+    padding: 0;
+  }
+
+  .section-note {
+    font-size: 13px;
+    color: var(--text-mid);
+    background: var(--accent-soft);
+    border: 1px solid #b3d4f0;
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 30px 20px;
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-icon">📢</div>
+  <div>
+    <h1>Canvas Announcement Generator</h1>
+    <p>Build and schedule an entire semester of announcements in one click</p>
+  </div>
+</header>
+
+<div class="main">
+
+  <!-- STEP 1: Canvas Credentials -->
+  <div class="card">
+    <div class="card-header">
+      <span class="step">1</span>
+      <h2>Canvas connection</h2>
+    </div>
+    <div class="card-body">
+      <div class="field">
+        <label>API Token</label>
+        <div class="toggle-pw">
+          <input type="password" id="apiToken" class="mono" placeholder="Paste your Canvas API token here" />
+          <button onclick="togglePw()" id="pwToggleBtn">Show</button>
+        </div>
+        <p class="hint">Canvas → Account → Settings → Approved Integrations → <strong>+ New Access Token</strong></p>
+      </div>
+      <div class="two-col">
+        <div class="field" style="margin:0">
+          <label>Canvas Domain</label>
+          <input type="text" id="canvasDomain" value="sjdc.instructure.com" class="mono" />
+        </div>
+        <div class="field" style="margin:0">
+          <label>Course ID</label>
+          <input type="text" id="courseId" value="2252" class="mono" placeholder="e.g. 148392" />
+          <p class="hint">Number in your Canvas course URL</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2: Semester Dates -->
+  <div class="card">
+    <div class="card-header">
+      <span class="step">2</span>
+      <h2>Semester dates</h2>
+    </div>
+    <div class="card-body">
+      <div class="two-col">
+        <div class="field" style="margin:0">
+          <label>First day of class</label>
+          <input type="date" id="semesterStart" />
+        </div>
+        <div class="field" style="margin:0">
+          <label>Last day of class</label>
+          <input type="date" id="semesterEnd" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3: Module Schedule -->
+  <div class="card">
+    <div class="card-header">
+      <span class="step">3</span>
+      <h2>Module schedule</h2>
+      <span class="badge" id="weekCount">0 weeks</span>
+    </div>
+    <div class="card-body">
+      <div class="field">
+        <label>Weekly module assignments</label>
+        <textarea id="moduleSchedule" placeholder="One line per week — examples:&#10;Week 1: Modules 1 and 2&#10;Week 2: Modules 3 and 4&#10;Week 3: Module 5&#10;Week 4: Modules 6, 7 and 8"></textarea>
+        <p class="hint">Each line = one week. Announcements post Wed, Fri & Sat before that Sunday's 11:59 PM deadline.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4: Preview -->
+  <div class="card">
+    <div class="card-header">
+      <span class="step">4</span>
+      <h2>Preview announcements</h2>
+    </div>
+    <div class="card-body">
+      <div class="actions" style="margin-bottom:14px">
+        <button class="btn btn-outline" onclick="generatePreview()">Generate preview</button>
+        <span class="count-note" id="previewCount"></span>
+      </div>
+      <div id="alertPreview" class="alert"></div>
+      <div id="previewList" class="announcement-list">
+        <div class="empty-state">Fill in steps 2 & 3 above, then click "Generate preview" to see all announcements before sending.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 5: Send to Canvas -->
+  <div class="card">
+    <div class="card-header">
+      <span class="step">5</span>
+      <h2>Send to Canvas</h2>
+    </div>
+    <div class="card-body">
+      <div class="section-note">
+        ⚠️ This will create real announcements in your Canvas course. Use a dev/test shell to verify before running on a live course.
+      </div>
+      <div class="actions">
+        <button class="btn btn-primary" id="sendBtn" onclick="sendToCanvas()">Send all announcements to Canvas</button>
+        <button class="btn btn-danger" id="deleteBtn" onclick="deleteAllAnnouncements()" style="display:none">Delete all generated announcements</button>
+      </div>
+      <div class="progress-wrap" id="progressWrap">
+        <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill"></div></div>
+        <div class="progress-text" id="progressText">Sending...</div>
+      </div>
+      <div id="alertSend" class="alert" style="margin-top:12px"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // ── Utility ──────────────────────────────────────────────
+  const $ = id => document.getElementById(id);
+
+  function togglePw() {
+    const inp = $('apiToken');
+    const btn = $('pwToggleBtn');
+    if (inp.type === 'password') { inp.type = 'text'; btn.textContent = 'Hide'; }
+    else { inp.type = 'password'; btn.textContent = 'Show'; }
+  }
+
+  function showAlert(id, type, msg) {
+    const el = $(id);
+    el.className = `alert alert-${type} show`;
+    el.innerHTML = msg;
+  }
+
+  function hideAlert(id) {
+    const el = $(id);
+    el.className = 'alert';
+    el.innerHTML = '';
+  }
+
+  function dayName(d) {
+    return ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()];
+  }
+
+  function monthName(d) {
+    return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()];
+  }
+
+  function fmtDate(d) {
+    return `${monthName(d)} ${d.getDate()}`;
+  }
+
+  function fmtFull(d) {
+    const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    return `${days[d.getDay()]}, ${monthName(d)} ${d.getDate()}`;
+  }
+
+  // Advance date by N days
+  function addDays(d, n) {
+    const r = new Date(d);
+    r.setDate(r.getDate() + n);
+    return r;
+  }
+
+  // Get Monday of week containing date d
+  function getMondayOf(d) {
+    const r = new Date(d);
+    const day = r.getDay(); // 0=Sun
+    const diff = (day === 0) ? -6 : 1 - day;
+    r.setDate(r.getDate() + diff);
+    return r;
+  }
+
+  // Parse module schedule text → array of {week, modules}
+  function parseSchedule(text) {
+    const lines = text.trim().split('\n').filter(l => l.trim());
+    return lines.map((line, i) => {
+      const colonIdx = line.indexOf(':');
+      const modules = colonIdx >= 0 ? line.slice(colonIdx + 1).trim() : line.trim();
+      return { weekNum: i + 1, modules };
+    });
+  }
+
+  // Build announcements array from schedule + start date
+  function buildAnnouncements(schedule, startDate) {
+    const announcements = [];
+    const start = new Date(startDate);
+
+    // Find the Monday of the first week
+    const firstMonday = getMondayOf(start);
+
+    schedule.forEach(({ weekNum, modules }, idx) => {
+      const weekMonday = addDays(firstMonday, idx * 7);
+      const sunday = addDays(weekMonday, 6); // Sunday = due date
+
+      // Wednesday reminder (4 days before Sunday)
+      const wed = addDays(sunday, -4);
+      // Friday reminder (2 days before)
+      const fri = addDays(sunday, -2);
+      // Saturday reminder (1 day before)
+      const sat = addDays(sunday, -1);
+
+      const dueDateStr = `${fmtFull(sunday)} at 11:59 PM`;
+      const shortDue   = `${monthName(sunday)} ${sunday.getDate()} at 11:59 PM`;
+
+      announcements.push({
+        day: 'Wed',
+        date: wed,
+        title: `Week ${weekNum} — ${modules} due this Sunday`,
+        body: `Hi everyone,\n\nJust a reminder that ${modules} are due this Sunday, ${shortDue}. Please give yourself plenty of time to work through the material and don't leave it until the last minute.\n\nLet me know if you have any questions!\n\n— Your Instructor`,
+        delayUntil: wed
+      });
+
+      announcements.push({
+        day: 'Fri',
+        date: fri,
+        title: `Reminder — ${modules} due in 2 days`,
+        body: `Hi everyone,\n\n${modules} are due this Sunday, ${shortDue} — just 2 days away. If you haven't started yet, now is the time!\n\nHave a great weekend,\n— Your Instructor`,
+        delayUntil: fri
+      });
+
+      announcements.push({
+        day: 'Sat',
+        date: sat,
+        title: `Last chance — ${modules} due tomorrow night`,
+        body: `Hi everyone,\n\nLast reminder — ${modules} are due tomorrow (Sunday) at 11:59 PM. Make sure you've submitted everything before midnight!\n\nGood luck,\n— Your Instructor`,
+        delayUntil: sat
+      });
+    });
+
+    return announcements;
+  }
+
+  // Format date for Canvas API (ISO with time = 8 AM)
+  function toCanvasDate(d, hour = 8) {
+    const pad = n => String(n).padStart(2,'0');
+    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(hour)}:00:00-08:00`;
+  }
+
+  // ── Preview ───────────────────────────────────────────────
+  let currentAnnouncements = [];
+  let createdIds = [];
+
+  function generatePreview() {
+    hideAlert('alertPreview');
+    const startDate = $('semesterStart').value;
+    const scheduleText = $('moduleSchedule').value.trim();
+
+    if (!startDate) return showAlert('alertPreview', 'warning', 'Please enter a semester start date.');
+    if (!scheduleText) return showAlert('alertPreview', 'warning', 'Please enter your module schedule.');
+
+    const schedule = parseSchedule(scheduleText);
+    $('weekCount').textContent = `${schedule.length} week${schedule.length !== 1 ? 's' : ''}`;
+
+    currentAnnouncements = buildAnnouncements(schedule, startDate);
+
+    const list = $('previewList');
+    list.innerHTML = '';
+    $('previewCount').textContent = `${currentAnnouncements.length} announcements total`;
+
+    currentAnnouncements.forEach(ann => {
+      const item = document.createElement('div');
+      item.className = 'ann-item';
+      const tagClass = ann.day === 'Wed' ? 'day-wed' : ann.day === 'Fri' ? 'day-fri' : 'day-sat';
+      item.innerHTML = `
+        <span class="ann-date">${monthName(ann.date)} ${ann.date.getDate()}, ${ann.date.getFullYear()}</span>
+        <span class="day-tag ${tagClass}">${ann.day}</span>
+        <div>
+          <div class="ann-title">${ann.title}</div>
+          <div class="ann-body">${ann.body.replace(/\n/g,'<br>')}</div>
+        </div>
+      `;
+      list.appendChild(item);
+    });
+  }
+
+  // ── Send to Canvas ────────────────────────────────────────
+  async function sendToCanvas() {
+    hideAlert('alertSend');
+    const token  = $('apiToken').value.trim();
+    const domain = $('canvasDomain').value.trim();
+    const courseId = $('courseId').value.trim();
+
+    if (!token)    return showAlert('alertSend', 'danger', 'Please enter your API token.');
+    if (!domain)   return showAlert('alertSend', 'danger', 'Please enter your Canvas domain.');
+    if (!courseId) return showAlert('alertSend', 'danger', 'Please enter your Course ID.');
+    if (currentAnnouncements.length === 0) return showAlert('alertSend', 'warning', 'Please generate a preview first (Step 4).');
+
+    const btn = $('sendBtn');
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+
+    const progress = $('progressWrap');
+    const fill = $('progressFill');
+    const pText = $('progressText');
+    progress.classList.add('show');
+    createdIds = [];
+
+    const total = currentAnnouncements.length;
+    let sent = 0;
+    let errors = 0;
+
+    for (const ann of currentAnnouncements) {
+      try {
+        const res = await fetch(`https://${domain}/api/v1/courses/${courseId}/discussion_topics`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            title: ann.title,
+            message: ann.body.replace(/\n/g, '<br>'),
+            is_announcement: true,
+            published: true,
+            delayed_post_at: toCanvasDate(ann.date, 8)
+          })
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          createdIds.push(data.id);
+          sent++;
+        } else {
+          const err = await res.json().catch(() => ({}));
+          console.error('Canvas error:', err);
+          errors++;
+        }
+      } catch (e) {
+        console.error('Network error:', e);
+        errors++;
+      }
+
+      const pct = Math.round(((sent + errors) / total) * 100);
+      fill.style.width = pct + '%';
+      pText.textContent = `Sent ${sent + errors} of ${total}...`;
+
+      // Small delay to avoid rate limiting
+      await new Promise(r => setTimeout(r, 300));
+    }
+
+    btn.disabled = false;
+    btn.textContent = 'Send all announcements to Canvas';
+
+    if (errors === 0) {
+      showAlert('alertSend', 'success', `✓ All ${sent} announcements created successfully in Canvas! Check your Announcements section.`);
+      $('deleteBtn').style.display = 'inline-block';
+    } else if (sent > 0) {
+      showAlert('alertSend', 'warning', `⚠️ ${sent} announcements sent, but ${errors} failed. Check the browser console for details. Common cause: invalid token or course ID.`);
+      if (createdIds.length > 0) $('deleteBtn').style.display = 'inline-block';
+    } else {
+      showAlert('alertSend', 'danger', `✗ All requests failed. Please check:<br>• Your API token is correct<br>• Your Canvas domain is <code>${domain}</code><br>• Your Course ID is <code>${courseId}</code><br>• You have permission to post announcements in this course`);
+    }
+  }
+
+  // ── Delete generated announcements (for testing) ──────────
+  async function deleteAllAnnouncements() {
+    if (createdIds.length === 0) return;
+    if (!confirm(`Delete all ${createdIds.length} announcements that were just created? This cannot be undone.`)) return;
+
+    const token    = $('apiToken').value.trim();
+    const domain   = $('canvasDomain').value.trim();
+    const courseId = $('courseId').value.trim();
+    const btn = $('deleteBtn');
+    btn.disabled = true;
+    btn.textContent = 'Deleting...';
+
+    let deleted = 0;
+    for (const id of createdIds) {
+      try {
+        await fetch(`https://${domain}/api/v1/courses/${courseId}/discussion_topics/${id}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        deleted++;
+      } catch(e) { console.error(e); }
+      await new Promise(r => setTimeout(r, 200));
+    }
+
+    createdIds = [];
+    btn.style.display = 'none';
+    btn.disabled = false;
+    btn.textContent = 'Delete all generated announcements';
+    showAlert('alertSend', 'info', `✓ Deleted ${deleted} test announcements from Canvas.`);
+  }
+
+  // ── Live week counter ─────────────────────────────────────
+  $('moduleSchedule').addEventListener('input', () => {
+    const lines = $('moduleSchedule').value.trim().split('\n').filter(l => l.trim());
+    $('weekCount').textContent = `${lines.length} week${lines.length !== 1 ? 's' : ''}`;
+  });
+</script>
+</body>
+</html>
