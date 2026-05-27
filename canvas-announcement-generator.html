@@ -476,7 +476,49 @@
     </div>
   </div>
 
-  <!-- STEP 3: Module Schedule -->
+  <!-- STEP 3: Message Templates -->
+  <div class="card">
+    <div class="card-header">
+      <span class="step">3</span>
+      <h2>Announcement messages</h2>
+      <span class="badge">optional — defaults provided</span>
+    </div>
+    <div class="card-body">
+      <div class="section-note" style="margin-bottom:16px">
+        Use <strong>[modules]</strong> where you want the module names to appear, and <strong>[date]</strong> where you want the due date. These are filled in automatically for each week.
+      </div>
+      <div class="field">
+        <label>Wednesday message</label>
+        <textarea id="msgWed" rows="4">Hi everyone,
+
+Just a reminder that [modules] are due this Sunday, [date]. Please give yourself plenty of time to work through the material and don't leave it until the last minute.
+
+Let me know if you have any questions!
+
+— Your Instructor</textarea>
+      </div>
+      <div class="field">
+        <label>Friday message</label>
+        <textarea id="msgFri" rows="4">Hi everyone,
+
+[modules] are due this Sunday, [date] — just 2 days away. If you haven't started yet, now is the time!
+
+Have a great weekend,
+— Your Instructor</textarea>
+      </div>
+      <div class="field" style="margin:0">
+        <label>Saturday message</label>
+        <textarea id="msgSat" rows="4">Hi everyone,
+
+Last reminder — [modules] are due tomorrow (Sunday) at 11:59 PM. Make sure you've submitted everything before midnight!
+
+Good luck,
+— Your Instructor</textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4: Module Schedule -->
   <div class="card">
     <div class="card-header">
       <span class="step">3</span>
@@ -492,10 +534,10 @@
     </div>
   </div>
 
-  <!-- STEP 4: Preview -->
+  <!-- STEP 5: Preview -->
   <div class="card">
     <div class="card-header">
-      <span class="step">4</span>
+      <span class="step">5</span>
       <h2>Preview announcements</h2>
     </div>
     <div class="card-body">
@@ -510,10 +552,10 @@
     </div>
   </div>
 
-  <!-- STEP 5: Send to Canvas -->
+  <!-- STEP 6: Send to Canvas -->
   <div class="card">
     <div class="card-header">
-      <span class="step">5</span>
+      <span class="step">6</span>
       <h2>Send to Canvas</h2>
     </div>
     <div class="card-body">
@@ -622,11 +664,17 @@
       const dueDateStr = `${fmtFull(sunday)} at 11:59 PM`;
       const shortDue   = `${monthName(sunday)} ${sunday.getDate()} at 11:59 PM`;
 
+      // Get message templates from text boxes, replace [modules] and [date] placeholders
+      function buildBody(templateId) {
+        const tpl = document.getElementById(templateId).value;
+        return tpl.replace(/\[modules\]/g, modules).replace(/\[date\]/g, shortDue);
+      }
+
       announcements.push({
         day: 'Wed',
         date: wed,
         title: `Week ${weekNum} — ${modules} due this Sunday`,
-        body: `Hi everyone,\n\nJust a reminder that ${modules} are due this Sunday, ${shortDue}. Please give yourself plenty of time to work through the material and don't leave it until the last minute.\n\nLet me know if you have any questions!\n\n— Your Instructor`,
+        body: buildBody('msgWed'),
         delayUntil: wed
       });
 
@@ -634,7 +682,7 @@
         day: 'Fri',
         date: fri,
         title: `Reminder — ${modules} due in 2 days`,
-        body: `Hi everyone,\n\n${modules} are due this Sunday, ${shortDue} — just 2 days away. If you haven't started yet, now is the time!\n\nHave a great weekend,\n— Your Instructor`,
+        body: buildBody('msgFri'),
         delayUntil: fri
       });
 
@@ -642,7 +690,7 @@
         day: 'Sat',
         date: sat,
         title: `Last chance — ${modules} due tomorrow night`,
-        body: `Hi everyone,\n\nLast reminder — ${modules} are due tomorrow (Sunday) at 11:59 PM. Make sure you've submitted everything before midnight!\n\nGood luck,\n— Your Instructor`,
+        body: buildBody('msgSat'),
         delayUntil: sat
       });
     });
