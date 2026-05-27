@@ -650,6 +650,9 @@
     return announcements;
   }
 
+  // Cloudflare Worker proxy URL
+  const PROXY = 'https://dry-darkness-f6c2.agarner32.workers.dev';
+
   // Format date for Canvas API (ISO with time = 8 AM)
   function toCanvasDate(d, hour = 8) {
     const pad = n => String(n).padStart(2,'0');
@@ -721,7 +724,8 @@
 
     for (const ann of currentAnnouncements) {
       try {
-        const res = await fetch(`https://${domain}/api/v1/courses/${courseId}/discussion_topics`, {
+        const canvasUrl = `https://${domain}/api/v1/courses/${courseId}/discussion_topics`;
+        const res = await fetch(`https://dry-darkness-f6c2.agarner32.workers.dev?url=${encodeURIComponent(canvasUrl)}`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -787,7 +791,8 @@
     let deleted = 0;
     for (const id of createdIds) {
       try {
-        await fetch(`https://${domain}/api/v1/courses/${courseId}/discussion_topics/${id}`, {
+        const delUrl = `https://${domain}/api/v1/courses/${courseId}/discussion_topics/${id}`;
+        await fetch(`https://dry-darkness-f6c2.agarner32.workers.dev?url=${encodeURIComponent(delUrl)}`, {
           method: 'DELETE',
           headers: { 'Authorization': `Bearer ${token}` }
         });
