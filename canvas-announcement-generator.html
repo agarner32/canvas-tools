@@ -476,52 +476,29 @@
     </div>
   </div>
 
-  <!-- STEP 3: Message Templates -->
+  <!-- STEP 3: Announcement Days + Messages -->
   <div class="card">
     <div class="card-header">
       <span class="step">3</span>
-      <h2>Announcement messages</h2>
-      <span class="badge">optional — defaults provided</span>
+      <h2>Announcement days &amp; messages</h2>
     </div>
     <div class="card-body">
       <div class="section-note" style="margin-bottom:16px">
-        Use <strong>[modules]</strong> where you want the module names to appear, and <strong>[date]</strong> where you want the due date. These are filled in automatically for each week.
+        Check the days you want announcements sent. A message box will appear for each selected day. Use <strong>[modules]</strong> and <strong>[date]</strong> as placeholders — they fill in automatically each week.
       </div>
       <div class="field">
-        <label>Wednesday message</label>
-        <textarea id="msgWed" rows="4">Hi everyone,
-
-Just a reminder that [modules] are due this Sunday, [date]. Please give yourself plenty of time to work through the material and don't leave it until the last minute.
-
-Let me know if you have any questions!
-
-— Your Instructor</textarea>
+        <label>Send announcements on</label>
+        <div id="dayPicker" style="display:flex; flex-wrap:wrap; gap:8px; margin-top:4px;">
+        </div>
       </div>
-      <div class="field">
-        <label>Friday message</label>
-        <textarea id="msgFri" rows="4">Hi everyone,
-
-[modules] are due this Sunday, [date] — just 2 days away. If you haven't started yet, now is the time!
-
-Have a great weekend,
-— Your Instructor</textarea>
-      </div>
-      <div class="field" style="margin:0">
-        <label>Saturday message</label>
-        <textarea id="msgSat" rows="4">Hi everyone,
-
-Last reminder — [modules] are due tomorrow (Sunday) at 11:59 PM. Make sure you've submitted everything before midnight!
-
-Good luck,
-— Your Instructor</textarea>
-      </div>
+      <div id="messageBoxes" style="margin-top:20px; display:flex; flex-direction:column; gap:16px;"></div>
     </div>
   </div>
 
   <!-- STEP 4: Module Schedule -->
   <div class="card">
     <div class="card-header">
-      <span class="step">3</span>
+      <span class="step">4</span>
       <h2>Module schedule</h2>
       <span class="badge" id="weekCount">0 weeks</span>
     </div>
@@ -529,7 +506,7 @@ Good luck,
       <div class="field">
         <label>Weekly module assignments</label>
         <textarea id="moduleSchedule" placeholder="One line per week — examples:&#10;Week 1: Modules 1 and 2&#10;Week 2: Modules 3 and 4&#10;Week 3: Module 5&#10;Week 4: Modules 6, 7 and 8"></textarea>
-        <p class="hint">Each line = one week. Announcements post Wed, Fri & Sat before that Sunday's 11:59 PM deadline.</p>
+        <p class="hint">Each line = one week. Each line = one week. Announcements post on your selected days before that Sunday's 11:59 PM deadline.</p>
       </div>
     </div>
   </div>
@@ -579,6 +556,67 @@ Good luck,
 <script>
   // ── Utility ──────────────────────────────────────────────
   const $ = id => document.getElementById(id);
+
+  // ── Day picker setup ─────────────────────────────────────
+  const ALL_DAYS = [
+    { id: 'Mon', label: 'Monday',    offset: -6, defaultMsg: 'Hi everyone,\n\n[modules] are due this Sunday, [date]. Just a heads up so you can plan your week!\n\n— Your Instructor' },
+    { id: 'Tue', label: 'Tuesday',   offset: -5, defaultMsg: 'Hi everyone,\n\nReminder that [modules] are due this Sunday, [date]. Plenty of time — get started if you haven\'t!\n\n— Your Instructor' },
+    { id: 'Wed', label: 'Wednesday', offset: -4, defaultMsg: 'Hi everyone,\n\nJust a reminder that [modules] are due this Sunday, [date]. Please give yourself plenty of time to work through the material and don\'t leave it until the last minute.\n\nLet me know if you have any questions!\n\n— Your Instructor' },
+    { id: 'Thu', label: 'Thursday',  offset: -3, defaultMsg: 'Hi everyone,\n\n[modules] are due this Sunday, [date] — just 3 days away. Make sure you\'re making progress!\n\n— Your Instructor' },
+    { id: 'Fri', label: 'Friday',    offset: -2, defaultMsg: 'Hi everyone,\n\n[modules] are due this Sunday, [date] — just 2 days away. If you haven\'t started yet, now is the time!\n\nHave a great weekend,\n— Your Instructor' },
+    { id: 'Sat', label: 'Saturday',  offset: -1, defaultMsg: 'Hi everyone,\n\nLast reminder — [modules] are due tomorrow (Sunday) at 11:59 PM. Make sure you\'ve submitted everything before midnight!\n\nGood luck,\n— Your Instructor' },
+  ];
+
+  // Default selected days
+  let selectedDays = new Set(['Wed', 'Fri', 'Sat']);
+
+  function buildDayPicker() {
+    const picker = $('dayPicker');
+    picker.innerHTML = '';
+    ALL_DAYS.forEach(day => {
+      const checked = selectedDays.has(day.id);
+      const btn = document.createElement('label');
+      btn.style.cssText = `display:flex; align-items:center; gap:6px; padding:7px 14px; border-radius:6px; border:1px solid ${checked ? 'var(--accent)' : 'var(--border)'}; background:${checked ? 'var(--accent-soft)' : '#fff'}; cursor:pointer; font-size:13px; font-weight:${checked ? '500' : '400'}; color:${checked ? 'var(--accent)' : 'var(--text-mid)'}; transition:all 0.15s; user-select:none;`;
+      btn.innerHTML = `<input type="checkbox" data-day="${day.id}" style="display:none" ${checked ? 'checked' : ''}>${day.label}`;
+      btn.querySelector('input').addEventListener('change', e => {
+        if (e.target.checked) selectedDays.add(day.id);
+        else selectedDays.delete(day.id);
+        buildDayPicker();
+        buildMessageBoxes();
+      });
+      picker.appendChild(btn);
+    });
+  }
+
+  function buildMessageBoxes() {
+    const container = $('messageBoxes');
+    const activeDays = ALL_DAYS.filter(d => selectedDays.has(d.id));
+
+    // Save existing values before rebuilding
+    const saved = {};
+    ALL_DAYS.forEach(d => {
+      const el = $('msg_' + d.id);
+      if (el) saved[d.id] = el.value;
+    });
+
+    container.innerHTML = '';
+    activeDays.forEach((day, i) => {
+      const field = document.createElement('div');
+      field.className = 'field';
+      if (i === activeDays.length - 1) field.style.margin = '0';
+      field.innerHTML = `
+        <label>${day.label} message</label>
+        <textarea id="msg_${day.id}" rows="4"></textarea>
+      `;
+      container.appendChild(field);
+      // Restore saved value or use default
+      $('msg_' + day.id).value = saved[day.id] !== undefined ? saved[day.id] : day.defaultMsg;
+    });
+  }
+
+  // Initialize day picker and message boxes on load
+  buildDayPicker();
+  buildMessageBoxes();
 
   function togglePw() {
     const inp = $('apiToken');
@@ -654,44 +692,21 @@ Good luck,
       const weekMonday = addDays(firstMonday, idx * 7);
       const sunday = addDays(weekMonday, 6); // Sunday = due date
 
-      // Wednesday reminder (4 days before Sunday)
-      const wed = addDays(sunday, -4);
-      // Friday reminder (2 days before)
-      const fri = addDays(sunday, -2);
-      // Saturday reminder (1 day before)
-      const sat = addDays(sunday, -1);
+      const shortDue = `${monthName(sunday)} ${sunday.getDate()} at 11:59 PM`;
 
-      const dueDateStr = `${fmtFull(sunday)} at 11:59 PM`;
-      const shortDue   = `${monthName(sunday)} ${sunday.getDate()} at 11:59 PM`;
-
-      // Get message templates from text boxes, replace [modules] and [date] placeholders
-      function buildBody(templateId) {
-        const tpl = document.getElementById(templateId).value;
-        return tpl.replace(/\[modules\]/g, modules).replace(/\[date\]/g, shortDue);
-      }
-
-      announcements.push({
-        day: 'Wed',
-        date: wed,
-        title: `Week ${weekNum} — ${modules} due this Sunday`,
-        body: buildBody('msgWed'),
-        delayUntil: wed
-      });
-
-      announcements.push({
-        day: 'Fri',
-        date: fri,
-        title: `Reminder — ${modules} due in 2 days`,
-        body: buildBody('msgFri'),
-        delayUntil: fri
-      });
-
-      announcements.push({
-        day: 'Sat',
-        date: sat,
-        title: `Last chance — ${modules} due tomorrow night`,
-        body: buildBody('msgSat'),
-        delayUntil: sat
+      // Build one announcement per selected day
+      const activeDays = ALL_DAYS.filter(d => selectedDays.has(d.id));
+      activeDays.forEach(day => {
+        const annDate = addDays(sunday, day.offset);
+        const msgEl = $('msg_' + day.id);
+        const body = msgEl ? msgEl.value.replace(/\[modules\]/g, modules).replace(/\[date\]/g, shortDue) : '';
+        announcements.push({
+          day: day.label.slice(0, 3),
+          date: annDate,
+          title: `Week ${weekNum} — ${modules} due this Sunday`,
+          body,
+          delayUntil: annDate
+        });
       });
     });
 
