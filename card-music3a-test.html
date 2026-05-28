@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Music 3A — Week Card</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background:transparent; }
+
+  .card {
+    background: #ffffff;
+    border: 1px solid #e2e0d8;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    max-width: 680px;
+  }
+
+  .card-header {
+    background: #4a90d9;
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .header-left { display: flex; align-items: center; gap: 10px; }
+
+  .course-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.9);
+    letter-spacing: 0.2px;
+  }
+
+  .week-pill {
+    background: rgba(255,255,255,0.2);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+
+  .date-range {
+    font-size: 11px;
+    color: rgba(255,255,255,0.65);
+  }
+
+  .card-body { padding: 16px 18px; }
+
+  .module-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #9a9a8e;
+    margin-bottom: 10px;
+  }
+
+  .items-list { display: flex; flex-direction: column; gap: 7px; }
+
+  .due-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 12px;
+    background: #f8f7f3;
+    border-radius: 6px;
+    border-left: 3px solid #4a90d9;
+  }
+
+  .due-item-icon { font-size: 14px; flex-shrink: 0; padding-top: 1px; }
+
+  .due-item-text { flex: 1; }
+
+  .due-item-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: #1a1a14;
+    line-height: 1.3;
+  }
+
+  .due-item-date {
+    font-size: 11px;
+    color: #7a7a6e;
+    margin-top: 2px;
+  }
+
+  .nothing-due {
+    text-align: center;
+    padding: 16px 12px;
+    color: #9a9a8e;
+  }
+
+  .nothing-due .check { font-size: 22px; margin-bottom: 6px; }
+  .nothing-due .msg { font-size: 14px; font-weight: 500; color: #5a5a4e; margin-bottom: 3px; }
+  .nothing-due .sub { font-size: 12px; color: #9a9a8e; }
+
+  .state-card {
+    text-align: center;
+    padding: 20px;
+  }
+
+  .state-card .icon { font-size: 26px; margin-bottom: 8px; }
+  .state-card .msg { font-size: 15px; font-weight: 500; color: #1a1a14; margin-bottom: 4px; }
+  .state-card .sub { font-size: 12px; color: #9a9a8e; }
+
+  .multi-module { margin-bottom: 14px; }
+  .multi-module:last-child { margin-bottom: 0; }
+  .multi-module .module-label { margin-bottom: 7px; }
+</style>
+</head>
+<body>
+<div class="card" id="root">
+  <div style="padding:16px; font-size:13px; color:#999; font-family:sans-serif">Loading...</div>
+</div>
+
+<script>
+  const ITEMS = [{"moduleId":333971,"moduleName":"Module 1","title":"Written Assignment 1","type":"assignment","dueAt":"2026-06-01T06:59:59Z"},{"moduleId":333971,"moduleName":"Module 1","title":"Dictation Assignment 1","type":"assignment","dueAt":"2026-06-01T06:59:59Z"},{"moduleId":333971,"moduleName":"Module 1","title":"Singing Assignment 1","type":"assignment","dueAt":"2026-06-01T06:59:59Z"},{"moduleId":395654,"moduleName":"Module 2","title":"Dictation Assignment 2","type":"assignment","dueAt":"2026-06-08T06:59:59Z"},{"moduleId":395654,"moduleName":"Module 2","title":"Written Assignment 2","type":"assignment","dueAt":"2026-06-08T06:59:59Z"}];
+  const COURSE_NAME = "Music 3A";
+
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const DAYS_LONG = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+  function fmtDate(d) {
+    return MONTHS[d.getMonth()] + '\u00a0' + d.getDate() + ', ' + d.getFullYear();
+  }
+
+  function fmtDateTime(iso) {
+    const d = new Date(iso);
+    const h = d.getHours();
+    const m = d.getMinutes();
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    const h12 = h % 12 || 12;
+    const mStr = m === 0 ? '' : ':' + String(m).padStart(2,'0');
+    return DAYS_LONG[d.getDay()] + ', ' + MONTHS[d.getMonth()] + '\u00a0' + d.getDate() + ' at ' + h12 + mStr + '\u00a0' + ampm;
+  }
+
+  function getWeekBounds(today) {
+    const d = new Date(today);
+    const day = d.getDay(); // 0=Sun
+    const diffToMon = day === 0 ? -6 : 1 - day;
+    const mon = new Date(d); mon.setDate(d.getDate() + diffToMon); mon.setHours(0,0,0,0);
+    const sun = new Date(mon); sun.setDate(mon.getDate() + 6); sun.setHours(23,59,59,999);
+    return { mon, sun };
+  }
+
+  function fmtWeekRange(mon, sun) {
+    if (mon.getMonth() === sun.getMonth()) {
+      return MONTHS[mon.getMonth()] + '\u00a0' + mon.getDate() + '\u2013' + sun.getDate();
+    }
+    return MONTHS[mon.getMonth()] + '\u00a0' + mon.getDate() + ' \u2013 ' + MONTHS[sun.getMonth()] + '\u00a0' + sun.getDate();
+  }
+
+  function typeIcon(type) {
+    if (type === 'quiz')       return '\u2705';
+    if (type === 'discussion') return '\uD83D\uDCAC';
+    return '\uD83D\uDCDD';
+  }
+
+  function getWeekNumber(today, allDates) {
+    const sorted = [...allDates].sort((a,b) => new Date(a) - new Date(b));
+    const first = new Date(sorted[0]);
+    // Week 1 starts on Monday of the week containing the first due date
+    const day = first.getDay();
+    const diffToMon = day === 0 ? -6 : 1 - day;
+    const firstMon = new Date(first); firstMon.setDate(first.getDate() + diffToMon); firstMon.setHours(0,0,0,0);
+    const ms = today.getTime() - firstMon.getTime();
+    return Math.floor(ms / (7 * 24 * 60 * 60 * 1000)) + 1;
+  }
+
+  function render() {
+    const root = document.getElementById('root');
+    const today = new Date();
+    const { mon, sun } = getWeekBounds(today);
+    const weekRange = fmtWeekRange(mon, sun);
+
+    // All due dates
+    const allDates = ITEMS.map(i => i.dueAt);
+    const firstDue = new Date(Math.min(...allDates.map(d => new Date(d))));
+    const lastDue  = new Date(Math.max(...allDates.map(d => new Date(d))));
+
+    // Before semester
+    if (today < firstDue && today < new Date(firstDue).setHours(0,0,0,0)) {
+      root.innerHTML = `
+        <div class="card-header">
+          <div class="header-left"><span class="course-name">${COURSE_NAME}</span></div>
+        </div>
+        <div class="card-body">
+          <div class="state-card">
+            <div class="icon">\uD83D\uDCC5</div>
+            <div class="msg">Course begins soon</div>
+            <div class="sub">First item due ${fmtDate(firstDue)}</div>
+          </div>
+        </div>`;
+      return;
+    }
+
+    // After semester
+    if (today > lastDue) {
+      root.innerHTML = `
+        <div class="card-header">
+          <div class="header-left"><span class="course-name">${COURSE_NAME}</span></div>
+        </div>
+        <div class="card-body">
+          <div class="state-card">
+            <div class="icon">\u2713</div>
+            <div class="msg">Semester complete</div>
+            <div class="sub">Great work this semester!</div>
+          </div>
+        </div>`;
+      return;
+    }
+
+    // Items due this week
+    const weekItems = ITEMS.filter(i => {
+      const d = new Date(i.dueAt);
+      return d >= mon && d <= sun;
+    });
+
+    const weekNum = getWeekNumber(today, allDates);
+
+    // Header HTML
+    const headerHtml = `
+      <div class="card-header">
+        <div class="header-left">
+          <span class="course-name">${COURSE_NAME}</span>
+          <span class="week-pill">Week ${weekNum}</span>
+        </div>
+        <span class="date-range">${weekRange}</span>
+      </div>`;
+
+    if (weekItems.length === 0) {
+      root.innerHTML = headerHtml + `
+        <div class="card-body">
+          <div class="nothing-due">
+            <div class="check">\u2714\uFE0F</div>
+            <div class="msg">Nothing due this week</div>
+            <div class="sub">Keep up with your reading and lecture materials</div>
+          </div>
+        </div>`;
+      return;
+    }
+
+    // Group by module
+    const byModule = {};
+    weekItems.forEach(item => {
+      if (!byModule[item.moduleName]) byModule[item.moduleName] = [];
+      byModule[item.moduleName].push(item);
+    });
+
+    const moduleNames = Object.keys(byModule);
+    const multiModule = moduleNames.length > 1;
+
+    let bodyHtml = '<div class="card-body">';
+
+    moduleNames.forEach(modName => {
+      const modItems = byModule[modName];
+      if (multiModule) bodyHtml += `<div class="multi-module">`;
+      bodyHtml += `<div class="module-label">${modName}</div>`;
+      bodyHtml += `<div class="items-list">`;
+      modItems.forEach(item => {
+        bodyHtml += `
+          <div class="due-item">
+            <div class="due-item-icon">${typeIcon(item.type)}</div>
+            <div class="due-item-text">
+              <div class="due-item-title">${item.title}</div>
+              <div class="due-item-date">Due ${fmtDateTime(item.dueAt)}</div>
+            </div>
+          </div>`;
+      });
+      bodyHtml += `</div>`;
+      if (multiModule) bodyHtml += `</div>`;
+    });
+
+    bodyHtml += '</div>';
+    root.innerHTML = headerHtml + bodyHtml;
+  }
+
+  render();
+</script>
+</body>
+</html>
