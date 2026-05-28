@@ -731,8 +731,10 @@
     const firstDue = new Date(Math.min(...allDates.map(d => new Date(d))));
     const lastDue  = new Date(Math.max(...allDates.map(d => new Date(d))));
 
-    // Before semester
-    if (today < firstDue && today < new Date(firstDue).setHours(0,0,0,0)) {
+    // Before semester — only show if today is more than 7 days before the first due date
+    const sevenDaysBefore = new Date(firstDue);
+    sevenDaysBefore.setDate(sevenDaysBefore.getDate() - 7);
+    if (today < sevenDaysBefore) {
       root.innerHTML = \`
         <div class="card-header">
           <div class="header-left"><span class="course-name">\${COURSE_NAME}</span></div>
