@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Canvas Date Adjuster</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #1e2d3d;
+    --navy-light: #2d3f52;
+    --accent: #4a90d9;
+    --accent-soft: #e8f2fb;
+    --success: #2d7a4f;
+    --success-soft: #e6f5ed;
+    --warning: #b45309;
+    --warning-soft: #fef3cd;
+    --danger: #b91c1c;
+    --danger-soft: #fde8e8;
+    --until: #7c3bb8;
+    --until-soft: #f3e8fe;
+    --border: #dde3ea;
+    --text: #1a2533;
+    --text-mid: #4a5568;
+    --text-muted: #8896a5;
+    --bg: #f5f7fa;
+    --surface: #ffffff;
+    --radius: 10px;
+    --radius-sm: 6px;
+    --module-bar: #2d3f52;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  header {
+    background: var(--navy);
+    padding: 18px 28px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  }
+
+  .header-icon {
+    width: 34px; height: 34px;
+    background: var(--accent);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  header h1 { font-size: 15px; font-weight: 600; color: #fff; }
+  header p  { font-size: 12px; color: #8a9fb5; margin-top: 1px; }
+
+  .header-actions {
+    margin-left: auto;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  /* ── Main layout ── */
+  .main { max-width: 1000px; margin: 0 auto; padding: 24px 20px; }
+
+  /* ── Connection card ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+
+  .card-header {
+    background: #f8fafc;
+    border-bottom: 1px solid var(--border);
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .card-header .step {
+    width: 20px; height: 20px;
+    background: var(--navy);
+    color: #fff;
+    border-radius: 50%;
+    font-size: 10px;
+    font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .card-header h2 { font-size: 13px; font-weight: 600; color: var(--text); }
+
+  .card-body { padding: 18px; }
+
+  .field { margin-bottom: 14px; }
+  .field:last-child { margin-bottom: 0; }
+
+  label {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-mid);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 5px;
+  }
+
+  input[type="text"],
+  input[type="password"],
+  input[type="number"],
+  select {
+    padding: 8px 11px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--text);
+    background: #fff;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  input:focus, select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(74,144,217,0.12);
+  }
+
+  .mono { font-family: 'DM Mono', monospace; font-size: 12px; }
+
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  .two-col   { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  .hint { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+  .toggle-pw { position: relative; }
+  .toggle-pw input { width: 100%; padding-right: 44px; }
+  .toggle-pw button {
+    position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+    background: none; border: none; cursor: pointer; color: var(--text-muted);
+    font-size: 12px; font-family: 'DM Sans', sans-serif; padding: 0;
+  }
+
+  /* ── Toolbar ── */
+  .toolbar {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .toolbar-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .toolbar-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    white-space: nowrap;
+  }
+
+  .toolbar select {
+    font-size: 12px;
+    padding: 5px 8px;
+  }
+
+  .toolbar-sep {
+    width: 1px;
+    height: 24px;
+    background: var(--border);
+    flex-shrink: 0;
+  }
+
+  .shift-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .shift-row input[type="number"] {
+    width: 60px;
+    font-size: 12px;
+    padding: 5px 8px;
+    text-align: center;
+  }
+
+  .shift-row select {
+    font-size: 12px;
+    padding: 5px 8px;
+  }
+
+  /* ── Buttons ── */
+  .btn {
+    padding: 7px 16px;
+    border-radius: var(--radius-sm);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .btn-primary   { background: var(--navy); color: #fff; }
+  .btn-primary:hover { background: var(--navy-light); }
+  .btn-primary:disabled { background: #a0adb8; cursor: not-allowed; }
+
+  .btn-accent    { background: var(--accent); color: #fff; }
+  .btn-accent:hover { background: #3a7bc8; }
+
+  .btn-outline   { background: transparent; color: var(--text-mid); border: 1px solid var(--border); }
+  .btn-outline:hover { background: var(--bg); }
+
+  .btn-success   { background: var(--success); color: #fff; }
+  .btn-success:hover { background: #236040; }
+  .btn-success:disabled { background: #a0adb8; cursor: not-allowed; }
+
+  .btn-sm { padding: 5px 10px; font-size: 12px; }
+
+  /* ── Module section ── */
+  .module-section { margin-bottom: 12px; }
+
+  .module-header {
+    background: var(--module-bar);
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: -0.1px;
+  }
+
+  .module-header .mod-count {
+    margin-left: auto;
+    font-size: 11px;
+    font-weight: 400;
+    color: #8a9fb5;
+  }
+
+  .module-items {
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+    overflow: hidden;
+  }
+
+  .item-row {
+    display: grid;
+    grid-template-columns: 28px 1fr repeat(3, 220px);
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    min-height: 52px;
+    transition: background 0.1s;
+  }
+
+  .item-row:last-child { border-bottom: none; }
+  .item-row:hover { background: #fafbfc; }
+  .item-row.modified { background: #fffbf0; }
+
+  .item-check {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 6px;
+  }
+
+  .item-check input[type="checkbox"] {
+    width: 14px; height: 14px;
+    cursor: pointer;
+    accent-color: var(--accent);
+  }
+
+  .item-name {
+    padding: 10px 12px 10px 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .item-icon {
+    width: 20px; height: 20px;
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    flex-shrink: 0;
+  }
+
+  .icon-assignment { background: #e8f2fb; }
+  .icon-quiz       { background: #e6f5ed; }
+  .icon-discussion { background: #fef3cd; }
+  .icon-page       { background: #f3e8fe; }
+
+  .item-title {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.3;
+  }
+
+  .item-type-tag {
+    font-size: 10px;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+
+  /* ── Date cells ── */
+  .date-cell {
+    padding: 8px 10px;
+    border-left: 1px solid var(--border);
+  }
+
+  .date-cell-header {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    margin-bottom: 4px;
+  }
+
+  .date-cell.due     .date-cell-header { color: var(--accent); }
+  .date-cell.avail   .date-cell-header { color: var(--success); }
+  .date-cell.until   .date-cell-header { color: var(--until); }
+
+  .date-input-wrap {
+    display: flex;
+    gap: 4px;
+  }
+
+  .date-input-wrap input[type="datetime-local"] {
+    width: 100%;
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    padding: 4px 6px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text);
+    background: #fff;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .date-cell.due   input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(74,144,217,0.15); }
+  .date-cell.avail input:focus { border-color: var(--success); box-shadow: 0 0 0 2px rgba(45,122,79,0.15); }
+  .date-cell.until input:focus { border-color: var(--until); box-shadow: 0 0 0 2px rgba(124,59,184,0.15); }
+
+  .date-cell.until input {
+    border-color: #d4b8f0;
+    background: #fdfbff;
+  }
+
+  .clear-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-muted);
+    font-size: 14px;
+    padding: 0 2px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .clear-btn:hover { color: var(--danger); }
+
+  /* ── Column headers ── */
+  .col-headers {
+    display: grid;
+    grid-template-columns: 28px 1fr repeat(3, 220px);
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    border-bottom: none;
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    padding: 7px 0;
+  }
+
+  .col-header {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    padding: 0 10px;
+  }
+
+  .col-header.due   { color: var(--accent); border-left: 1px solid var(--border); }
+  .col-header.avail { color: var(--success); border-left: 1px solid var(--border); }
+  .col-header.until { color: var(--until); border-left: 1px solid var(--border); }
+
+  /* ── Alerts ── */
+  .alert {
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    line-height: 1.5;
+    margin-bottom: 12px;
+    display: none;
+  }
+
+  .alert.show { display: block; }
+  .alert-success { background: var(--success-soft); color: var(--success); border: 1px solid #a7d4bb; }
+  .alert-danger  { background: var(--danger-soft);  color: var(--danger);  border: 1px solid #f5c6c6; }
+  .alert-info    { background: var(--accent-soft);  color: #1a4f7a;        border: 1px solid #b3d4f0; }
+  .alert-warning { background: var(--warning-soft); color: var(--warning); border: 1px solid #f5d78a; }
+
+  /* ── Progress ── */
+  .progress-wrap { display: none; margin: 10px 0; }
+  .progress-wrap.show { display: block; }
+  .progress-bar-bg { background: var(--bg); border: 1px solid var(--border); border-radius: 20px; height: 6px; overflow: hidden; margin-bottom: 5px; }
+  .progress-bar-fill { height: 100%; background: var(--accent); border-radius: 20px; transition: width 0.3s; width: 0%; }
+  .progress-text { font-size: 11px; color: var(--text-muted); }
+
+  /* ── Empty / loading states ── */
+  .state-box {
+    text-align: center;
+    padding: 48px 24px;
+    color: var(--text-muted);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .state-box .icon { font-size: 32px; margin-bottom: 12px; }
+  .state-box strong { display: block; font-size: 15px; color: var(--text-mid); margin-bottom: 6px; }
+
+  .spinner {
+    display: inline-block;
+    width: 18px; height: 18px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    vertical-align: middle;
+    margin-right: 6px;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── Status bar ── */
+  .status-bar {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-left: auto;
+  }
+
+  /* ── Legend ── */
+  .legend {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .legend-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+
+  @media (max-width: 800px) {
+    .item-row { grid-template-columns: 28px 1fr; }
+    .date-cell { grid-column: 1 / -1; border-left: none; border-top: 1px solid var(--border); }
+    .col-headers { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-icon">📅</div>
+  <div>
+    <h1>Canvas Date Adjuster</h1>
+    <p>Edit all course dates in one place</p>
+  </div>
+  <div class="header-actions">
+    <div id="statusBar" class="status-bar"></div>
+    <button class="btn btn-success" id="saveBtn" onclick="saveAllChanges()" disabled>Save changes</button>
+  </div>
+</header>
+
+<div class="main">
+
+  <!-- Step 1: Connection -->
+  <div class="card">
+    <div class="card-header">
+      <span class="step">1</span>
+      <h2>Canvas connection</h2>
+    </div>
+    <div class="card-body">
+      <div class="field">
+        <label>API Token</label>
+        <div class="toggle-pw">
+          <input type="password" id="apiToken" class="mono" placeholder="Paste your Canvas API token" style="width:100%" />
+          <button onclick="togglePw()">Show</button>
+        </div>
+        <p class="hint">Canvas → Account → Settings → Approved Integrations → + New Access Token</p>
+      </div>
+      <div class="three-col">
+        <div class="field" style="margin:0">
+          <label>Canvas Domain</label>
+          <input type="text" id="canvasDomain" value="sjdc.instructure.com" class="mono" style="width:100%" />
+        </div>
+        <div class="field" style="margin:0">
+          <label>Course ID</label>
+          <input type="text" id="courseId" class="mono" placeholder="e.g. 2252" style="width:100%" />
+          <p class="hint">Number in your Canvas course URL</p>
+        </div>
+        <div class="field" style="margin:0; display:flex; align-items:flex-end;">
+          <button class="btn btn-accent" onclick="loadCourse()" id="loadBtn" style="width:100%">Load course</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Alerts -->
+  <div id="alertMain" class="alert"></div>
+
+  <!-- Step 2: Toolbar (hidden until course loads) -->
+  <div id="toolbarWrap" style="display:none">
+    <div class="toolbar">
+      <div class="toolbar-group">
+        <span class="toolbar-label">Filter</span>
+        <select id="filterType" onchange="applyFilters()">
+          <option value="all">All items</option>
+          <option value="assignment">Assignments</option>
+          <option value="quiz">Quizzes</option>
+          <option value="discussion">Discussions</option>
+          <option value="page">Pages</option>
+        </select>
+      </div>
+
+      <div class="toolbar-sep"></div>
+
+      <div class="toolbar-group">
+        <span class="toolbar-label">Shift all dates</span>
+        <div class="shift-row">
+          <select id="shiftDir">
+            <option value="forward">Forward</option>
+            <option value="back">Back</option>
+          </select>
+          <input type="number" id="shiftDays" value="7" min="1" max="365" />
+          <span style="font-size:12px; color:var(--text-mid)">days</span>
+          <button class="btn btn-outline btn-sm" onclick="shiftAllDates()">Apply shift</button>
+        </div>
+      </div>
+
+      <div class="toolbar-sep"></div>
+
+      <div class="toolbar-group">
+        <button class="btn btn-outline btn-sm" onclick="clearAllDates()">Clear all dates</button>
+        <button class="btn btn-outline btn-sm" onclick="reloadCourse()">↺ Reload</button>
+      </div>
+
+      <div class="legend" style="margin-left:auto">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div>Due</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--success)"></div>Available From</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--until)"></div>Until (hard close)</div>
+      </div>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="progress-wrap" id="progressWrap">
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill"></div></div>
+      <div class="progress-text" id="progressText">Saving...</div>
+    </div>
+  </div>
+
+  <!-- Course content -->
+  <div id="courseContent">
+    <div class="state-box">
+      <div class="icon">📋</div>
+      <strong>No course loaded</strong>
+      Enter your API token and course ID above, then click "Load course."
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // ── Config ────────────────────────────────────────────────
+  const PROXY = 'https://dry-darkness-f6c2.agarner32.workers.dev';
+
+  const $ = id => document.getElementById(id);
+
+  function togglePw() {
+    const inp = $('apiToken');
+    inp.type = inp.type === 'password' ? 'text' : 'password';
+    event.target.textContent = inp.type === 'password' ? 'Show' : 'Hide';
+  }
+
+  function showAlert(type, msg) {
+    const el = $('alertMain');
+    el.className = `alert alert-${type} show`;
+    el.innerHTML = msg;
+  }
+
+  function hideAlert() {
+    const el = $('alertMain');
+    el.className = 'alert';
+    el.innerHTML = '';
+  }
+
+  // ── API helpers ───────────────────────────────────────────
+  function getToken()  { return $('apiToken').value.trim(); }
+  function getDomain() { return $('canvasDomain').value.trim(); }
+  function getCourse() { return $('courseId').value.trim(); }
+
+  async function canvasFetch(path, method = 'GET', body = null) {
+    const url = `https://${getDomain()}${path}`;
+    const opts = {
+      method,
+      headers: {
+        'Authorization': `Bearer ${getToken()}`,
+        'Content-Type': 'application/json'
+      }
+    };
+    if (body) opts.body = JSON.stringify(body);
+    const res = await fetch(`${PROXY}?url=${encodeURIComponent(url)}`, opts);
+    if (!res.ok) throw new Error(`Canvas API error: ${res.status}`);
+    return res.json();
+  }
+
+  // Canvas paginates — fetch all pages
+  async function canvasFetchAll(path) {
+    let results = [];
+    let url = `https://${getDomain()}${path}${path.includes('?') ? '&' : '?'}per_page=100`;
+    while (url) {
+      const res = await fetch(`${PROXY}?url=${encodeURIComponent(url)}`, {
+        headers: {
+          'Authorization': `Bearer ${getToken()}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      if (!res.ok) throw new Error(`Canvas API error: ${res.status}`);
+      const data = await res.json();
+      results = results.concat(data);
+      // Check Link header for next page
+      const link = res.headers.get('Link') || '';
+      const nextMatch = link.match(/<([^>]+)>;\s*rel="next"/);
+      url = nextMatch ? nextMatch[1] : null;
+    }
+    return results;
+  }
+
+  // ── Data storage ──────────────────────────────────────────
+  let courseData = []; // Array of { module, items: [{id, type, title, due, availableFrom, until, originalDue, originalFrom, originalUntil}] }
+  let modifiedItems = new Set();
+
+  // ── Load course ───────────────────────────────────────────
+  async function loadCourse() {
+    const token  = getToken();
+    const domain = getDomain();
+    const course = getCourse();
+    if (!token)  return showAlert('warning', 'Please enter your API token.');
+    if (!course) return showAlert('warning', 'Please enter a course ID.');
+
+    hideAlert();
+    const btn = $('loadBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Loading...';
+    $('courseContent').innerHTML = '<div class="state-box"><span class="spinner"></span> Fetching course data from Canvas...</div>';
+    $('toolbarWrap').style.display = 'none';
+    $('saveBtn').disabled = true;
+    modifiedItems.clear();
+    courseData = [];
+
+    try {
+      // 1. Get modules
+      const modules = await canvasFetchAll(`/api/v1/courses/${course}/modules`);
+
+      // 2. For each module get items
+      for (const mod of modules) {
+        const items = await canvasFetchAll(`/api/v1/courses/${course}/modules/${mod.id}/items`);
+
+        const enriched = [];
+        for (const item of items) {
+          const type = item.type ? item.type.toLowerCase() : '';
+          if (!['assignment','quiz','discussion','page','discussiontopic'].includes(type)) continue;
+
+          let due = null, availFrom = null, until = null, itemId = item.content_id || item.id;
+          let normalizedType = type;
+
+          try {
+            if (type === 'assignment') {
+              const d = await canvasFetch(`/api/v1/courses/${course}/assignments/${itemId}`);
+              due       = d.due_at || null;
+              availFrom = d.unlock_at || null;
+              until     = d.lock_at || null;
+            } else if (type === 'quiz') {
+              const d = await canvasFetch(`/api/v1/courses/${course}/quizzes/${itemId}`);
+              due       = d.due_at || null;
+              availFrom = d.unlock_at || null;
+              until     = d.lock_at || null;
+            } else if (type === 'discussion' || type === 'discussiontopic') {
+              const d = await canvasFetch(`/api/v1/courses/${course}/discussion_topics/${itemId}`);
+              due       = d.assignment ? d.assignment.due_at : null;
+              availFrom = d.delayed_post_at || null;
+              until     = d.lock_at || null;
+              normalizedType = 'discussion';
+            } else if (type === 'page') {
+              // Pages use url slug
+              const d = await canvasFetch(`/api/v1/courses/${course}/pages/${item.page_url || itemId}`);
+              availFrom = d.unlock_at || null;
+              until     = d.lock_at || null;
+              normalizedType = 'page';
+            }
+          } catch(e) {
+            // Skip items we can't fetch
+          }
+
+          enriched.push({
+            id: itemId,
+            moduleItemId: item.id,
+            type: normalizedType,
+            title: item.title,
+            pageUrl: item.page_url,
+            due,
+            availableFrom: availFrom,
+            until,
+            originalDue: due,
+            originalFrom: availFrom,
+            originalUntil: until
+          });
+        }
+
+        if (enriched.length > 0) {
+          courseData.push({ module: mod, items: enriched });
+        }
+      }
+
+      renderCourse();
+      $('toolbarWrap').style.display = 'block';
+      $('statusBar').textContent = `${courseData.reduce((a,m) => a + m.items.length, 0)} items loaded`;
+
+    } catch(e) {
+      showAlert('danger', `Failed to load course. Please check your API token and course ID.<br><small>${e.message}</small>`);
+      $('courseContent').innerHTML = '<div class="state-box"><div class="icon">⚠️</div><strong>Could not load course</strong>Check your connection details above.</div>';
+    }
+
+    btn.disabled = false;
+    btn.textContent = 'Load course';
+  }
+
+  async function reloadCourse() {
+    if (modifiedItems.size > 0) {
+      if (!confirm('Reload will discard unsaved changes. Continue?')) return;
+    }
+    await loadCourse();
+  }
+
+  // ── Render ────────────────────────────────────────────────
+  const TYPE_META = {
+    assignment: { icon: '📝', label: 'Assignment', iconClass: 'icon-assignment' },
+    quiz:       { icon: '✅', label: 'Quiz',       iconClass: 'icon-quiz' },
+    discussion: { icon: '💬', label: 'Discussion', iconClass: 'icon-discussion' },
+    page:       { icon: '📄', label: 'Page',       iconClass: 'icon-page' }
+  };
+
+  function toLocalInput(isoStr) {
+    if (!isoStr) return '';
+    const d = new Date(isoStr);
+    const pad = n => String(n).padStart(2,'0');
+    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+
+  function fromLocalInput(val) {
+    if (!val) return null;
+    return new Date(val).toISOString();
+  }
+
+  function renderCourse() {
+    const filterType = $('filterType') ? $('filterType').value : 'all';
+    const content = $('courseContent');
+
+    if (courseData.length === 0) {
+      content.innerHTML = '<div class="state-box"><div class="icon">📭</div><strong>No modules found</strong>This course has no modules or no supported item types.</div>';
+      return;
+    }
+
+    let html = '';
+    let totalVisible = 0;
+
+    for (const { module, items } of courseData) {
+      const filtered = filterType === 'all' ? items : items.filter(i => i.type === filterType);
+      if (filtered.length === 0) continue;
+      totalVisible += filtered.length;
+
+      html += `
+        <div class="module-section">
+          <div class="col-headers">
+            <div class="col-header"></div>
+            <div class="col-header">Item</div>
+            <div class="col-header due">Due date</div>
+            <div class="col-header avail">Available from</div>
+            <div class="col-header until">Until (hard close)</div>
+          </div>
+          <div class="module-header">
+            <span>📦</span>
+            <span>${escHtml(module.name)}</span>
+            <span class="mod-count">${filtered.length} item${filtered.length !== 1 ? 's' : ''}</span>
+          </div>
+          <div class="module-items">
+      `;
+
+      for (const item of filtered) {
+        const meta = TYPE_META[item.type] || TYPE_META.assignment;
+        const isModified = modifiedItems.has(item.id);
+        const rowId = `row-${item.id}`;
+
+        html += `
+          <div class="item-row${isModified ? ' modified' : ''}" id="${rowId}">
+            <div class="item-check">
+              <input type="checkbox" data-id="${item.id}" />
+            </div>
+            <div class="item-name">
+              <div class="item-icon ${meta.iconClass}">${meta.icon}</div>
+              <div>
+                <div class="item-title">${escHtml(item.title)}</div>
+                <div class="item-type-tag">${meta.label}</div>
+              </div>
+            </div>
+            <div class="date-cell due">
+              <div class="date-cell-header">Due</div>
+              <div class="date-input-wrap">
+                <input type="datetime-local" data-id="${item.id}" data-field="due"
+                  value="${toLocalInput(item.due)}"
+                  onchange="onDateChange('${item.id}','due',this.value)" />
+                <button class="clear-btn" onclick="clearDate('${item.id}','due')" title="Clear">×</button>
+              </div>
+            </div>
+            <div class="date-cell avail">
+              <div class="date-cell-header">Available from</div>
+              <div class="date-input-wrap">
+                <input type="datetime-local" data-id="${item.id}" data-field="availableFrom"
+                  value="${toLocalInput(item.availableFrom)}"
+                  onchange="onDateChange('${item.id}','availableFrom',this.value)" />
+                <button class="clear-btn" onclick="clearDate('${item.id}','availableFrom')" title="Clear">×</button>
+              </div>
+            </div>
+            <div class="date-cell until">
+              <div class="date-cell-header">Until (hard close)</div>
+              <div class="date-input-wrap">
+                <input type="datetime-local" data-id="${item.id}" data-field="until"
+                  value="${toLocalInput(item.until)}"
+                  onchange="onDateChange('${item.id}','until',this.value)" />
+                <button class="clear-btn" onclick="clearDate('${item.id}','until')" title="Clear">×</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      html += `</div></div>`;
+    }
+
+    if (totalVisible === 0) {
+      content.innerHTML = '<div class="state-box"><div class="icon">🔍</div><strong>No items match the filter</strong>Try a different item type.</div>';
+    } else {
+      content.innerHTML = html;
+    }
+
+    updateSaveBtn();
+  }
+
+  function escHtml(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // ── Date change tracking ──────────────────────────────────
+  function findItem(id) {
+    for (const { items } of courseData) {
+      const item = items.find(i => String(i.id) === String(id));
+      if (item) return item;
+    }
+    return null;
+  }
+
+  function onDateChange(id, field, val) {
+    const item = findItem(id);
+    if (!item) return;
+    item[field] = val ? fromLocalInput(val) : null;
+    markModified(id);
+  }
+
+  function clearDate(id, field) {
+    const item = findItem(id);
+    if (!item) return;
+    item[field] = null;
+    // Update the input
+    const inp = document.querySelector(`input[data-id="${id}"][data-field="${field}"]`);
+    if (inp) inp.value = '';
+    markModified(id);
+  }
+
+  function markModified(id) {
+    modifiedItems.add(String(id));
+    const row = document.getElementById(`row-${id}`);
+    if (row) row.classList.add('modified');
+    updateSaveBtn();
+  }
+
+  function updateSaveBtn() {
+    const btn = $('saveBtn');
+    btn.disabled = modifiedItems.size === 0;
+    btn.textContent = modifiedItems.size > 0 ? `Save ${modifiedItems.size} change${modifiedItems.size !== 1 ? 's' : ''}` : 'Save changes';
+    $('statusBar').textContent = modifiedItems.size > 0 ? `${modifiedItems.size} unsaved change${modifiedItems.size !== 1 ? 's' : ''}` : `${courseData.reduce((a,m) => a + m.items.length, 0)} items loaded`;
+  }
+
+  // ── Filter ────────────────────────────────────────────────
+  function applyFilters() { renderCourse(); }
+
+  // ── Shift all dates ───────────────────────────────────────
+  function shiftAllDates() {
+    const days = parseInt($('shiftDays').value) || 7;
+    const dir  = $('shiftDir').value === 'forward' ? 1 : -1;
+    const ms   = dir * days * 24 * 60 * 60 * 1000;
+
+    let count = 0;
+    for (const { items } of courseData) {
+      for (const item of items) {
+        if (item.due)           { item.due           = shiftISO(item.due, ms);           count++; }
+        if (item.availableFrom) { item.availableFrom = shiftISO(item.availableFrom, ms); }
+        if (item.until)         { item.until         = shiftISO(item.until, ms);         }
+        modifiedItems.add(String(item.id));
+      }
+    }
+
+    renderCourse();
+    showAlert('info', `✓ Shifted all dates ${dir > 0 ? 'forward' : 'back'} by ${days} day${days !== 1 ? 's' : ''}. Review and click "Save changes" when ready.`);
+  }
+
+  function shiftISO(iso, ms) {
+    if (!iso) return null;
+    return new Date(new Date(iso).getTime() + ms).toISOString();
+  }
+
+  // ── Clear all dates ───────────────────────────────────────
+  function clearAllDates() {
+    if (!confirm('Clear ALL dates from every item in this course? This cannot be undone without reloading.')) return;
+    for (const { items } of courseData) {
+      for (const item of items) {
+        item.due = null; item.availableFrom = null; item.until = null;
+        modifiedItems.add(String(item.id));
+      }
+    }
+    renderCourse();
+    showAlert('warning', 'All dates cleared. Click "Save changes" to apply, or click ↺ Reload to discard.');
+  }
+
+  // ── Save changes ──────────────────────────────────────────
+  async function saveAllChanges() {
+    if (modifiedItems.size === 0) return;
+    const course = getCourse();
+
+    const btn = $('saveBtn');
+    btn.disabled = true;
+    btn.textContent = 'Saving...';
+    hideAlert();
+
+    const progress  = $('progressWrap');
+    const fill      = $('progressFill');
+    const pText     = $('progressText');
+    progress.classList.add('show');
+
+    const toSave = [];
+    for (const { items } of courseData) {
+      for (const item of items) {
+        if (modifiedItems.has(String(item.id))) toSave.push(item);
+      }
+    }
+
+    let saved = 0, errors = 0;
+    const total = toSave.length;
+
+    for (const item of toSave) {
+      try {
+        await saveItem(course, item);
+        saved++;
+        item.originalDue   = item.due;
+        item.originalFrom  = item.availableFrom;
+        item.originalUntil = item.until;
+      } catch(e) {
+        console.error('Save error for', item.title, e);
+        errors++;
+      }
+
+      const pct = Math.round(((saved + errors) / total) * 100);
+      fill.style.width = pct + '%';
+      pText.textContent = `Saved ${saved + errors} of ${total}...`;
+      await new Promise(r => setTimeout(r, 150));
+    }
+
+    modifiedItems.clear();
+    progress.classList.remove('show');
+    renderCourse();
+    updateSaveBtn();
+
+    if (errors === 0) {
+      showAlert('success', `✓ All ${saved} item${saved !== 1 ? 's' : ''} saved successfully to Canvas!`);
+    } else {
+      showAlert('warning', `⚠️ ${saved} saved, ${errors} failed. Check the browser console for details.`);
+    }
+  }
+
+  async function saveItem(course, item) {
+    if (item.type === 'assignment') {
+      await canvasFetch(`/api/v1/courses/${course}/assignments/${item.id}`, 'PUT', {
+        assignment: { due_at: item.due, unlock_at: item.availableFrom, lock_at: item.until }
+      });
+    } else if (item.type === 'quiz') {
+      await canvasFetch(`/api/v1/courses/${course}/quizzes/${item.id}`, 'PUT', {
+        quiz: { due_at: item.due, unlock_at: item.availableFrom, lock_at: item.until }
+      });
+    } else if (item.type === 'discussion') {
+      await canvasFetch(`/api/v1/courses/${course}/discussion_topics/${item.id}`, 'PUT', {
+        delayed_post_at: item.availableFrom, lock_at: item.until
+      });
+    } else if (item.type === 'page') {
+      await canvasFetch(`/api/v1/courses/${course}/pages/${item.pageUrl || item.id}`, 'PUT', {
+        wiki_page: { unlock_at: item.availableFrom, lock_at: item.until }
+      });
+    }
+  }
+</script>
+</body>
+</html>
