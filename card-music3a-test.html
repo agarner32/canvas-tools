@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Music 3A — Week Card</title>
+<title>My Course — Week Card</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background:transparent; }
@@ -18,7 +18,7 @@
   }
 
   .card-header {
-    background: #4a90d9;
+    background: #b45309;
     padding: 12px 18px;
     display: flex;
     align-items: center;
@@ -69,7 +69,7 @@
     padding: 8px 12px;
     background: #f8f7f3;
     border-radius: 6px;
-    border-left: 3px solid #4a90d9;
+    border-left: 3px solid #b45309;
   }
 
   .due-item-icon { font-size: 14px; flex-shrink: 0; padding-top: 1px; }
@@ -120,7 +120,7 @@
 
 <script>
   const ITEMS = [{"moduleId":333971,"moduleName":"Module 1","title":"Written Assignment 1","type":"assignment","dueAt":"2026-06-01T06:59:59Z"},{"moduleId":333971,"moduleName":"Module 1","title":"Dictation Assignment 1","type":"assignment","dueAt":"2026-06-01T06:59:59Z"},{"moduleId":333971,"moduleName":"Module 1","title":"Singing Assignment 1","type":"assignment","dueAt":"2026-06-01T06:59:59Z"},{"moduleId":395654,"moduleName":"Module 2","title":"Dictation Assignment 2","type":"assignment","dueAt":"2026-06-08T06:59:59Z"},{"moduleId":395654,"moduleName":"Module 2","title":"Written Assignment 2","type":"assignment","dueAt":"2026-06-08T06:59:59Z"}];
-  const COURSE_NAME = "Music 3A";
+  const COURSE_NAME = "My Course";
 
   const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const DAYS_LONG = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
@@ -183,8 +183,10 @@
     const firstDue = new Date(Math.min(...allDates.map(d => new Date(d))));
     const lastDue  = new Date(Math.max(...allDates.map(d => new Date(d))));
 
-    // Before semester
-    if (today < firstDue && today < new Date(firstDue).setHours(0,0,0,0)) {
+    // Before semester — only show if today is more than 7 days before the first due date
+    const sevenDaysBefore = new Date(firstDue);
+    sevenDaysBefore.setDate(sevenDaysBefore.getDate() - 7);
+    if (today < sevenDaysBefore) {
       root.innerHTML = `
         <div class="card-header">
           <div class="header-left"><span class="course-name">${COURSE_NAME}</span></div>
