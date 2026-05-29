@@ -526,7 +526,7 @@
       renderPreview(allItems, name, selectedColor);
       $('previewCard').style.display = 'block';
       $('itemCount').textContent = `${allItems.length} item${allItems.length !== 1 ? 's' : ''} with due dates`;
-      $('iframeSnippet').textContent = `<iframe src="https://agarner32.github.io/canvas-tools/${filename}" width="100%" height="380" frameborder="0" scrolling="no"></iframe>`;
+      $('iframeSnippet').textContent = '<iframe id="weekCard" src="https://agarner32.github.io/canvas-tools/' + filename + '" width="100%" height="200" frameborder="0" scrolling="no" style="display:block;margin:0 auto;max-width:680px;"></iframe><script>window.addEventListener(\'message\',function(e){if(e.data&&e.data.iframeHeight){document.getElementById(\'weekCard\').style.height=(e.data.iframeHeight+20)+\'px\';}})<\/script>';
       $('previewCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
 
       showAlert('success', `✓ Card generated with ${allItems.length} items. Preview below — click "Download card file" when ready.`);
@@ -831,6 +831,19 @@
   }
 
   render();
+
+  // Auto-resize: tell the parent iframe how tall we are
+  function reportHeight() {
+    const height = document.body.scrollHeight;
+    window.parent.postMessage({ iframeHeight: height }, '*');
+  }
+
+  // Report after render and whenever window resizes
+  reportHeight();
+  window.addEventListener('resize', reportHeight);
+
+  // Also report after a short delay to catch any late rendering
+  setTimeout(reportHeight, 300);
 <\/script>
 </body>
 </html>`;
