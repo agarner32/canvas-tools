@@ -318,6 +318,22 @@
         </div>
         <p class="hint">Used for the card header. Pick a preset or enter any hex color code to match your course design.</p>
       </div>
+      <div class="field" style="margin-top:16px; margin-bottom:0">
+        <label>Header text color</label>
+        <div style="display:flex; align-items:center; gap:10px; margin-top:6px; flex-wrap:wrap;">
+          <label style="display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:6px;border:1px solid var(--border);background:#fff;cursor:pointer;font-size:13px;font-weight:500;color:var(--text-mid);">
+            <input type="radio" name="textColor" value="#ffffff" checked onchange="selectTextColor('#ffffff')" style="accent-color:var(--accent)"> White
+          </label>
+          <label style="display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:6px;border:1px solid var(--border);background:#fff;cursor:pointer;font-size:13px;font-weight:500;color:var(--text-mid);">
+            <input type="radio" name="textColor" value="#000000" onchange="selectTextColor('#000000')" style="accent-color:var(--accent)"> Black
+          </label>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div id="customTextColorPreview" style="width:28px;height:28px;border-radius:50%;border:2px solid var(--border);background:#ffffff;flex-shrink:0;"></div>
+            <input type="text" id="customTextColor" class="mono" placeholder="Or type a hex code" style="width:200px;" oninput="applyCustomTextColor(this.value)" />
+          </div>
+        </div>
+        <p class="hint">White works well on dark headers. Black is better for accessibility on lighter colors.</p>
+      </div>
       <div class="field" style="margin:0">
         <label>Output filename</label>
         <input type="text" id="fileName" class="filename-input" value="card-music9-fall26.html" style="width:100%" />
@@ -387,6 +403,7 @@
   // ── Config ────────────────────────────────────────────────
   const PROXY = 'https://dry-darkness-f6c2.agarner32.workers.dev';
   let selectedColor = '#1e2d3d';
+  let selectedTextColor = '#ffffff';
   let generatedCardHtml = '';
 
   const $ = id => document.getElementById(id);
@@ -419,13 +436,29 @@
   }
 
   function applyCustomColor(val) {
-    // Accept valid hex colors
     const hex = val.trim();
     if (/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(hex)) {
       selectedColor = hex;
       document.getElementById('customColorPreview').style.background = hex;
-      // Deselect preset swatches
       document.querySelectorAll('.color-opt').forEach(e => e.classList.remove('selected'));
+    }
+  }
+
+  function selectTextColor(val) {
+    selectedTextColor = val;
+    const preview = document.getElementById('customTextColorPreview');
+    if (preview) preview.style.background = val;
+    const customInput = document.getElementById('customTextColor');
+    if (customInput) customInput.value = val;
+  }
+
+  function applyCustomTextColor(val) {
+    const hex = val.trim();
+    if (/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(hex)) {
+      selectedTextColor = hex;
+      document.getElementById('customTextColorPreview').style.background = hex;
+      // Deselect radio buttons
+      document.querySelectorAll('input[name="textColor"]').forEach(r => r.checked = false);
     }
   }
 
@@ -556,11 +589,11 @@
       }
 
       // 3. Generate the card HTML
-      generatedCardHtml = buildCardHtml(allItems, name, selectedColor);
+      generatedCardHtml = buildCardHtml(allItems, name, selectedColor, selectedTextColor);
 
       // 4. Show preview
       setProgress(100, 'Done!');
-      renderPreview(allItems, name, selectedColor);
+      renderPreview(allItems, name, selectedColor, selectedTextColor);
       $('previewCard').style.display = 'block';
       $('itemCount').textContent = `${allItems.length} item${allItems.length !== 1 ? 's' : ''} with due dates`;
       $('iframeSnippet').textContent = '<iframe src="https://agarner32.github.io/canvas-tools/' + filename + '" width="100%" height="540" frameborder="0" scrolling="no" style="display:block;margin:0 auto;max-width:680px;"></iframe>';
@@ -578,7 +611,8 @@
   }
 
   // ── Card HTML builder ─────────────────────────────────────
-  function buildCardHtml(items, courseName, accentColor) {
+  function buildCardHtml(items, courseName, accentColor, textColor) {
+    textColor = textColor || "#ffffff";
     // Serialize items as JSON to embed in the card
     const data = JSON.stringify(items);
     const escaped = data.replace(/\\/g, '\\\\').replace(/`/g, '\\`');
@@ -615,14 +649,14 @@
   .course-name {
     font-size: 18px;
     font-weight: 600;
-    color: rgba(255,255,255,0.95);
+    color: ${textColor};
     letter-spacing: 0.2px;
     text-align: center;
   }
 
   .week-pill {
-    background: rgba(255,255,255,0.2);
-    color: #fff;
+    background: rgba(0,0,0,0.15);
+    color: ${textColor};
     font-size: 11px;
     font-weight: 600;
     padding: 3px 9px;
@@ -632,7 +666,8 @@
 
   .date-range {
     font-size: 11px;
-    color: rgba(255,255,255,0.65);
+    color: ${textColor};
+    opacity: 0.75;
   }
 
   .card-body { padding: 16px 18px; }
@@ -707,6 +742,7 @@
 <script>
   const ITEMS = ${escaped};
   const COURSE_NAME = ${JSON.stringify(courseName)};
+  const TEXT_COLOR = ${JSON.stringify(textColor)};
 
   const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const DAYS_LONG = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
@@ -888,7 +924,8 @@
   }
 
   // ── Preview renderer ──────────────────────────────────────
-  function renderPreview(items, courseName, accentColor) {
+  function renderPreview(items, courseName, accentColor, textColor) {
+    textColor = textColor || "#ffffff";
     const today = new Date();
     const wrap = $('previewWrap');
 
@@ -941,7 +978,7 @@
       <div style="background:#fff;border:1px solid #e2e0d8;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06);width:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
         <div style="background:${accentColor};padding:16px 18px;display:flex;align-items:center;justify-content:space-between">
           <div style="display:flex;align-items:center;gap:10px">
-            <span style="font-size:18px;font-weight:600;color:rgba(255,255,255,0.95)">${escHtml(courseName)}</span>
+            <span style="font-size:18px;font-weight:600;color:' + (textColor || '#ffffff') + '">${escHtml(courseName)}</span>
             <span style="background:rgba(255,255,255,0.2);color:#fff;font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px">Week Card Preview</span>
           </div>
           <span style="font-size:11px;color:rgba(255,255,255,0.65)">${label}</span>
