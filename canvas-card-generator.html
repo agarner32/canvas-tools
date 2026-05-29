@@ -312,7 +312,11 @@
           <div class="color-opt" style="background:#b91c1c" data-color="#b91c1c" onclick="selectColor(this)" title="Red"></div>
           <div class="color-opt" style="background:#0f766e" data-color="#0f766e" onclick="selectColor(this)" title="Teal"></div>
         </div>
-        <p class="hint">Used for the card header. Pick something that matches your course homepage.</p>
+        <div style="display:flex; align-items:center; gap:10px; margin-top:10px;">
+          <div id="customColorPreview" style="width:28px;height:28px;border-radius:50%;border:2px solid var(--border);background:#1e2d3d;flex-shrink:0;"></div>
+          <input type="text" id="customColor" class="mono" placeholder="Or type a hex code  e.g. #8db48e" style="width:220px;" oninput="applyCustomColor(this.value)" />
+        </div>
+        <p class="hint">Used for the card header. Pick a preset or enter any hex color code to match your course design.</p>
       </div>
       <div class="field" style="margin:0">
         <label>Output filename</label>
@@ -393,10 +397,36 @@
     event.target.textContent = inp.type === 'password' ? 'Show' : 'Hide';
   }
 
+  // Initialize custom color field to match default selected swatch
+  window.addEventListener('DOMContentLoaded', function() {
+    const customInput = document.getElementById('customColor');
+    if (customInput) {
+      customInput.value = selectedColor;
+      document.getElementById('customColorPreview').style.background = selectedColor;
+    }
+  });
+
   function selectColor(el) {
     document.querySelectorAll('.color-opt').forEach(e => e.classList.remove('selected'));
     el.classList.add('selected');
     selectedColor = el.dataset.color;
+    // Sync with custom color field
+    const customInput = document.getElementById('customColor');
+    if (customInput) {
+      customInput.value = selectedColor;
+      document.getElementById('customColorPreview').style.background = selectedColor;
+    }
+  }
+
+  function applyCustomColor(val) {
+    // Accept valid hex colors
+    const hex = val.trim();
+    if (/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(hex)) {
+      selectedColor = hex;
+      document.getElementById('customColorPreview').style.background = hex;
+      // Deselect preset swatches
+      document.querySelectorAll('.color-opt').forEach(e => e.classList.remove('selected'));
+    }
   }
 
   function showAlert(type, msg) {
