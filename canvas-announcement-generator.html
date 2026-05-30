@@ -685,12 +685,13 @@
     const announcements = [];
     const start = new Date(startDate);
 
-    // Find the Monday of the first week
-    const firstMonday = getMondayOf(start);
+    // Find the first Sunday on or after the start date
+    const dayOfWeek = start.getDay(); // 0=Sun, 1=Mon, ... 6=Sat
+    const daysUntilSunday = dayOfWeek === 0 ? 0 : 7 - dayOfWeek;
+    const firstSunday = addDays(start, daysUntilSunday);
 
     schedule.forEach(({ weekNum, modules }, idx) => {
-      const weekMonday = addDays(firstMonday, idx * 7);
-      const sunday = addDays(weekMonday, 6); // Sunday = due date
+      const sunday = addDays(firstSunday, idx * 7); // Sunday = due date
 
       const shortDue = `${monthName(sunday)} ${sunday.getDate()} at 11:59 PM`;
 
