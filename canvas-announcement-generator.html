@@ -473,6 +473,19 @@
           <input type="date" id="semesterEnd" />
         </div>
       </div>
+      <div class="field" style="margin-top:16px; margin-bottom:0">
+        <label>Announcement release time</label>
+        <select id="releaseHour" style="width:auto;">
+          <option value="6">6:00 AM</option>
+          <option value="7">7:00 AM</option>
+          <option value="8">8:00 AM</option>
+          <option value="9" selected>9:00 AM</option>
+          <option value="10">10:00 AM</option>
+          <option value="11">11:00 AM</option>
+          <option value="12">12:00 PM (Noon)</option>
+        </select>
+        <p class="hint">The time each announcement becomes visible to students.</p>
+      </div>
     </div>
   </div>
 
@@ -717,10 +730,16 @@
   // Cloudflare Worker proxy URL
   const PROXY = 'https://dry-darkness-f6c2.agarner32.workers.dev';
 
-  // Format date for Canvas API (ISO with time = 8 AM)
-  function toCanvasDate(d, hour = 8) {
+  // Format date for Canvas API (uses local timezone automatically)
+  function toCanvasDate(d, hour = 9) {
     const pad = n => String(n).padStart(2,'0');
-    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(hour)}:00:00-08:00`;
+    const target = new Date(d.getFullYear(), d.getMonth(), d.getDate(), hour, 0, 0);
+    const offsetMin = target.getTimezoneOffset(); // e.g. 420 for PDT, 480 for PST
+    const sign = offsetMin <= 0 ? '+' : '-';
+    const absOffset = Math.abs(offsetMin);
+    const offsetHr = pad(Math.floor(absOffset / 60));
+    const offsetMn = pad(absOffset % 60);
+    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(hour)}:00:00${sign}${offsetHr}:${offsetMn}`;
   }
 
   // ── Preview ───────────────────────────────────────────────
@@ -800,7 +819,7 @@
             message: ann.body.replace(/\n/g, '<br>'),
             is_announcement: true,
             published: true,
-            delayed_post_at: toCanvasDate(ann.date, 8)
+            delayed_post_at: toCanvasDate(ann.date, parseInt($('releaseHour').value))
           })
         });
 
