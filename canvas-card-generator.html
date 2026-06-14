@@ -205,7 +205,6 @@
   .progress-bar-fill { height: 100%; background: var(--accent); border-radius: 20px; transition: width 0.3s; width: 0%; }
   .progress-text { font-size: 12px; color: var(--text-muted); }
 
-  /* Preview area */
   .preview-frame-wrap {
     background: #f0f2f5;
     border: 1px solid var(--border);
@@ -223,7 +222,6 @@
     font-size: 13px;
   }
 
-  /* Color options */
   .color-options {
     display: flex;
     gap: 10px;
@@ -260,7 +258,6 @@
 
 <div class="main">
 
-  <!-- Step 1: Connection -->
   <div class="card">
     <div class="card-header">
       <span class="step">1</span>
@@ -289,7 +286,6 @@
     </div>
   </div>
 
-  <!-- Step 2: Card Settings -->
   <div class="card">
     <div class="card-header">
       <span class="step">2</span>
@@ -342,10 +338,8 @@
     </div>
   </div>
 
-  <!-- Alerts -->
   <div id="alertMain" class="alert"></div>
 
-  <!-- Step 3: Generate -->
   <div class="card">
     <div class="card-header">
       <span class="step">3</span>
@@ -365,7 +359,6 @@
     </div>
   </div>
 
-  <!-- Step 4: Preview & Download (hidden until generated) -->
   <div class="card" id="previewCard" style="display:none">
     <div class="card-header">
       <span class="step">4</span>
@@ -400,7 +393,6 @@
 </div>
 
 <script>
-  // ── Config ────────────────────────────────────────────────
   const PROXY = 'https://dry-darkness-f6c2.agarner32.workers.dev';
   let selectedColor = '#1e2d3d';
   let selectedTextColor = '#ffffff';
@@ -414,7 +406,6 @@
     event.target.textContent = inp.type === 'password' ? 'Show' : 'Hide';
   }
 
-  // Initialize custom color field to match default selected swatch
   window.addEventListener('DOMContentLoaded', function() {
     const customInput = document.getElementById('customColor');
     if (customInput) {
@@ -427,7 +418,6 @@
     document.querySelectorAll('.color-opt').forEach(e => e.classList.remove('selected'));
     el.classList.add('selected');
     selectedColor = el.dataset.color;
-    // Sync with custom color field
     const customInput = document.getElementById('customColor');
     if (customInput) {
       customInput.value = selectedColor;
@@ -457,7 +447,6 @@
     if (/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(hex)) {
       selectedTextColor = hex;
       document.getElementById('customTextColorPreview').style.background = hex;
-      // Deselect radio buttons
       document.querySelectorAll('input[name="textColor"]').forEach(r => r.checked = false);
     }
   }
@@ -478,15 +467,15 @@
     $('progressText').textContent = msg;
   }
 
-  // ── API ───────────────────────────────────────────────────
   function getToken()  { return $('apiToken').value.trim(); }
   function getDomain() { return $('canvasDomain').value.trim(); }
   function getCourse() { return $('courseId').value.trim(); }
 
+  // ── CHANGED: Content-Type replaced with Accept in both fetch functions ──
   async function canvasFetch(path) {
     const url = `https://${getDomain()}${path}`;
     const res = await fetch(`${PROXY}?url=${encodeURIComponent(url)}`, {
-      headers: { 'Authorization': `Bearer ${getToken()}`, 'Content-Type': 'application/json' }
+      headers: { 'Authorization': `Bearer ${getToken()}`, 'Accept': 'application/json' }
     });
     if (!res.ok) throw new Error(`Canvas API ${res.status}`);
     return res.json();
@@ -497,7 +486,7 @@
     let url = `https://${getDomain()}${path}${path.includes('?') ? '&' : '?'}per_page=100`;
     while (url) {
       const res = await fetch(`${PROXY}?url=${encodeURIComponent(url)}`, {
-        headers: { 'Authorization': `Bearer ${getToken()}`, 'Content-Type': 'application/json' }
+        headers: { 'Authorization': `Bearer ${getToken()}`, 'Accept': 'application/json' }
       });
       if (!res.ok) throw new Error(`Canvas API ${res.status}`);
       const data = await res.json();
@@ -509,7 +498,6 @@
     return results;
   }
 
-  // ── Pull & Generate ───────────────────────────────────────
   async function pullAndGenerate() {
     const token    = getToken();
     const domain   = getDomain();
@@ -528,13 +516,11 @@
     setProgress(5, 'Connecting to Canvas...');
 
     try {
-      // 1. Get modules
       setProgress(10, 'Fetching modules...');
       const modules = await canvasFetchAll(`/api/v1/courses/${course}/modules`);
       setProgress(20, `Found ${modules.length} modules. Fetching items...`);
 
-      // 2. Collect all items with due dates
-      const allItems = []; // { moduleId, moduleName, title, type, dueAt }
+      const allItems = [];
       let processed = 0;
 
       for (const mod of modules) {
@@ -561,7 +547,6 @@
             }
           } catch(e) { /* skip unfetchable items */ }
 
-          // Only include items WITH a due date
           if (dueAt) {
             allItems.push({
               moduleId:   mod.id,
@@ -588,10 +573,8 @@
         return;
       }
 
-      // 3. Generate the card HTML
       generatedCardHtml = buildCardHtml(allItems, name, selectedColor, selectedTextColor);
 
-      // 4. Show preview
       setProgress(100, 'Done!');
       renderPreview(allItems, name, selectedColor, selectedTextColor);
       $('previewCard').style.display = 'block';
@@ -610,10 +593,8 @@
     setTimeout(() => $('progressWrap').classList.remove('show'), 1000);
   }
 
-  // ── Card HTML builder ─────────────────────────────────────
   function buildCardHtml(items, courseName, accentColor, textColor) {
     textColor = textColor || "#ffffff";
-    // Serialize items as JSON to embed in the card
     const data = JSON.stringify(items);
     const escaped = data.replace(/\\/g, '\\\\').replace(/`/g, '\\`');
 
@@ -626,109 +607,28 @@
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background:transparent; }
-
-  .card {
-    background: #ffffff;
-    border: 1px solid #e2e0d8;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    max-width: 680px;
-  }
-
-  .card-header {
-    background: ${accentColor};
-    padding: 16px 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
+  .card { background: #ffffff; border: 1px solid #e2e0d8; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); max-width: 680px; }
+  .card-header { background: ${accentColor}; padding: 16px 18px; display: flex; align-items: center; justify-content: center; }
   .header-left { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; }
-
-  .course-name {
-    font-size: 18px;
-    font-weight: 600;
-    color: ${textColor};
-    letter-spacing: 0.2px;
-    text-align: center;
-  }
-
-  .week-pill {
-    background: rgba(0,0,0,0.15);
-    color: ${textColor};
-    font-size: 11px;
-    font-weight: 600;
-    padding: 3px 9px;
-    border-radius: 20px;
-    letter-spacing: 0.5px;
-  }
-
-  .date-range {
-    font-size: 11px;
-    color: ${textColor};
-    opacity: 0.75;
-  }
-
+  .course-name { font-size: 18px; font-weight: 600; color: ${textColor}; letter-spacing: 0.2px; text-align: center; }
+  .week-pill { background: rgba(0,0,0,0.15); color: ${textColor}; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 20px; letter-spacing: 0.5px; }
+  .date-range { font-size: 11px; color: ${textColor}; opacity: 0.75; }
   .card-body { padding: 16px 18px; }
-
-  .module-label {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    color: #9a9a8e;
-    margin-bottom: 10px;
-  }
-
+  .module-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: #9a9a8e; margin-bottom: 10px; }
   .items-list { display: flex; flex-direction: column; gap: 7px; }
-
-  .due-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 8px 12px;
-    background: #f8f7f3;
-    border-radius: 6px;
-    border-left: 3px solid ${accentColor};
-  }
-
+  .due-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 12px; background: #f8f7f3; border-radius: 6px; border-left: 3px solid ${accentColor}; }
   .due-item-icon { font-size: 14px; flex-shrink: 0; padding-top: 1px; }
-
   .due-item-text { flex: 1; }
-
-  .due-item-title {
-    font-size: 13px;
-    font-weight: 500;
-    color: #1a1a14;
-    line-height: 1.3;
-  }
-
-  .due-item-date {
-    font-size: 11px;
-    color: #7a7a6e;
-    margin-top: 2px;
-  }
-
-  .nothing-due {
-    text-align: center;
-    padding: 16px 12px;
-    color: #9a9a8e;
-  }
-
+  .due-item-title { font-size: 13px; font-weight: 500; color: #1a1a14; line-height: 1.3; }
+  .due-item-date { font-size: 11px; color: #7a7a6e; margin-top: 2px; }
+  .nothing-due { text-align: center; padding: 16px 12px; color: #9a9a8e; }
   .nothing-due .check { font-size: 22px; margin-bottom: 6px; }
   .nothing-due .msg { font-size: 14px; font-weight: 500; color: #5a5a4e; margin-bottom: 3px; }
   .nothing-due .sub { font-size: 12px; color: #9a9a8e; }
-
-  .state-card {
-    text-align: center;
-    padding: 20px;
-  }
-
+  .state-card { text-align: center; padding: 20px; }
   .state-card .icon { font-size: 26px; margin-bottom: 8px; }
   .state-card .msg { font-size: 15px; font-weight: 500; color: #1a1a14; margin-bottom: 4px; }
   .state-card .sub { font-size: 12px; color: #9a9a8e; }
-
   .multi-module { margin-bottom: 14px; }
   .multi-module:last-child { margin-bottom: 0; }
   .multi-module .module-label { margin-bottom: 7px; }
@@ -738,212 +638,109 @@
 <div class="card" id="root">
   <div style="padding:16px; font-size:13px; color:#999; font-family:sans-serif">Loading...</div>
 </div>
-
 <script>
   const ITEMS = ${escaped};
   const COURSE_NAME = ${JSON.stringify(courseName)};
   const TEXT_COLOR = ${JSON.stringify(textColor)};
-
   const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const DAYS_LONG = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-
-  function fmtDate(d) {
-    return MONTHS[d.getMonth()] + '\\u00a0' + d.getDate() + ', ' + d.getFullYear();
-  }
-
+  function fmtDate(d) { return MONTHS[d.getMonth()] + '\\u00a0' + d.getDate() + ', ' + d.getFullYear(); }
   function fmtDateTime(iso) {
     const d = new Date(iso);
-    const h = d.getHours();
-    const m = d.getMinutes();
+    const h = d.getHours(); const m = d.getMinutes();
     const ampm = h >= 12 ? 'PM' : 'AM';
     const h12 = h % 12 || 12;
     const mStr = m === 0 ? '' : ':' + String(m).padStart(2,'0');
     return DAYS_LONG[d.getDay()] + ', ' + MONTHS[d.getMonth()] + '\\u00a0' + d.getDate() + ' at ' + h12 + mStr + '\\u00a0' + ampm;
   }
-
   function getWeekBounds(today) {
     const d = new Date(today);
-    const day = d.getDay(); // 0=Sun
+    const day = d.getDay();
     const diffToMon = day === 0 ? -6 : 1 - day;
     const mon = new Date(d); mon.setDate(d.getDate() + diffToMon); mon.setHours(0,0,0,0);
     const sun = new Date(mon); sun.setDate(mon.getDate() + 6); sun.setHours(23,59,59,999);
     return { mon, sun };
   }
-
   function fmtWeekRange(mon, sun) {
-    if (mon.getMonth() === sun.getMonth()) {
-      return MONTHS[mon.getMonth()] + '\\u00a0' + mon.getDate() + '\\u2013' + sun.getDate();
-    }
+    if (mon.getMonth() === sun.getMonth()) return MONTHS[mon.getMonth()] + '\\u00a0' + mon.getDate() + '\\u2013' + sun.getDate();
     return MONTHS[mon.getMonth()] + '\\u00a0' + mon.getDate() + ' \\u2013 ' + MONTHS[sun.getMonth()] + '\\u00a0' + sun.getDate();
   }
-
   function typeIcon(type) {
-    if (type === 'quiz')       return '\\u2705';
+    if (type === 'quiz') return '\\u2705';
     if (type === 'discussion') return '\\uD83D\\uDCAC';
     return '\\uD83D\\uDCDD';
   }
-
   function getWeekNumber(today, allDates) {
     const sorted = [...allDates].sort((a,b) => new Date(a) - new Date(b));
     const first = new Date(sorted[0]);
-    // Week 1 starts on Monday of the week containing the first due date
     const day = first.getDay();
     const diffToMon = day === 0 ? -6 : 1 - day;
     const firstMon = new Date(first); firstMon.setDate(first.getDate() + diffToMon); firstMon.setHours(0,0,0,0);
     const ms = today.getTime() - firstMon.getTime();
     return Math.floor(ms / (7 * 24 * 60 * 60 * 1000)) + 1;
   }
-
   function render() {
     const root = document.getElementById('root');
     const today = new Date();
     const { mon, sun } = getWeekBounds(today);
     const weekRange = fmtWeekRange(mon, sun);
-
-    // All due dates
     const allDates = ITEMS.map(i => i.dueAt);
     const firstDue = new Date(Math.min(...allDates.map(d => new Date(d))));
     const lastDue  = new Date(Math.max(...allDates.map(d => new Date(d))));
-
-    // Before semester — only show if today is more than 7 days before the first due date
-    const sevenDaysBefore = new Date(firstDue);
-    sevenDaysBefore.setDate(sevenDaysBefore.getDate() - 0);
-    if (today < sevenDaysBefore) {
-      root.innerHTML = \`
-        <div class="card-header">
-          <div class="header-left"><span class="course-name">\${COURSE_NAME}</span></div>
-        </div>
-        <div class="card-body">
-          <div class="state-card">
-            <div class="icon">\\uD83D\\uDCC5</div>
-            <div class="msg">Course begins soon</div>
-            <div class="sub">First item due \${fmtDate(firstDue)}</div>
-          </div>
-        </div>\`;
+    if (today < firstDue) {
+      root.innerHTML = \`<div class="card-header"><div class="header-left"><span class="course-name">\${COURSE_NAME}</span></div></div><div class="card-body"><div class="state-card"><div class="icon">\\uD83D\\uDCC5</div><div class="msg">Course begins soon</div><div class="sub">First item due \${fmtDate(firstDue)}</div></div></div>\`;
       return;
     }
-
-    // After semester
     if (today > lastDue) {
-      root.innerHTML = \`
-        <div class="card-header">
-          <div class="header-left"><span class="course-name">\${COURSE_NAME}</span></div>
-        </div>
-        <div class="card-body">
-          <div class="state-card">
-            <div class="icon">\\u2713</div>
-            <div class="msg">Semester complete</div>
-            <div class="sub">Great work this semester!</div>
-          </div>
-        </div>\`;
+      root.innerHTML = \`<div class="card-header"><div class="header-left"><span class="course-name">\${COURSE_NAME}</span></div></div><div class="card-body"><div class="state-card"><div class="icon">\\u2713</div><div class="msg">Semester complete</div><div class="sub">Great work this semester!</div></div></div>\`;
       return;
     }
-
-    // Items due this week
-    const weekItems = ITEMS.filter(i => {
-      const d = new Date(i.dueAt);
-      return d >= mon && d <= sun;
-    });
-
+    const weekItems = ITEMS.filter(i => { const d = new Date(i.dueAt); return d >= mon && d <= sun; });
     const weekNum = getWeekNumber(today, allDates);
-
-    // Header HTML
-    const headerHtml = \`
-      <div class="card-header">
-        <div class="header-left">
-          <span class="course-name">\${COURSE_NAME}</span>
-          <span class="week-pill">Week \${weekNum}</span>
-        </div>
-        <span class="date-range">\${weekRange}</span>
-      </div>\`;
-
+    const headerHtml = \`<div class="card-header"><div class="header-left"><span class="course-name">\${COURSE_NAME}</span><span class="week-pill">Week \${weekNum}</span></div><span class="date-range">\${weekRange}</span></div>\`;
     if (weekItems.length === 0) {
-      root.innerHTML = headerHtml + \`
-        <div class="card-body">
-          <div class="nothing-due">
-            <div class="check">\\u2714\\uFE0F</div>
-            <div class="msg">Nothing due this week</div>
-            <div class="sub">Keep up with your reading and lecture materials</div>
-          </div>
-        </div>\`;
+      root.innerHTML = headerHtml + \`<div class="card-body"><div class="nothing-due"><div class="check">\\u2714\\uFE0F</div><div class="msg">Nothing due this week</div><div class="sub">Keep up with your reading and lecture materials</div></div></div>\`;
       return;
     }
-
-    // Group by module
     const byModule = {};
-    weekItems.forEach(item => {
-      if (!byModule[item.moduleName]) byModule[item.moduleName] = [];
-      byModule[item.moduleName].push(item);
-    });
-
+    weekItems.forEach(item => { if (!byModule[item.moduleName]) byModule[item.moduleName] = []; byModule[item.moduleName].push(item); });
     const moduleNames = Object.keys(byModule);
     const multiModule = moduleNames.length > 1;
-
     let bodyHtml = '<div class="card-body">';
-
     moduleNames.forEach(modName => {
       const modItems = byModule[modName];
       if (multiModule) bodyHtml += \`<div class="multi-module">\`;
-      bodyHtml += \`<div class="module-label">\${modName}</div>\`;
-      bodyHtml += \`<div class="items-list">\`;
+      bodyHtml += \`<div class="module-label">\${modName}</div><div class="items-list">\`;
       modItems.forEach(item => {
-        bodyHtml += \`
-          <div class="due-item">
-            <div class="due-item-icon">\${typeIcon(item.type)}</div>
-            <div class="due-item-text">
-              <div class="due-item-title">\${item.title}</div>
-              <div class="due-item-date">Due \${fmtDateTime(item.dueAt)}</div>
-            </div>
-          </div>\`;
+        bodyHtml += \`<div class="due-item"><div class="due-item-icon">\${typeIcon(item.type)}</div><div class="due-item-text"><div class="due-item-title">\${item.title}</div><div class="due-item-date">Due \${fmtDateTime(item.dueAt)}</div></div></div>\`;
       });
       bodyHtml += \`</div>\`;
       if (multiModule) bodyHtml += \`</div>\`;
     });
-
     bodyHtml += '</div>';
     root.innerHTML = headerHtml + bodyHtml;
   }
-
   render();
-
-  // Auto-resize: tell the parent iframe how tall we are
-  function reportHeight() {
-    const height = document.body.scrollHeight;
-    window.parent.postMessage({ iframeHeight: height }, '*');
-  }
-
-  // Report after render and whenever window resizes
+  function reportHeight() { window.parent.postMessage({ iframeHeight: document.body.scrollHeight }, '*'); }
   reportHeight();
   window.addEventListener('resize', reportHeight);
-
-  // Also report after a short delay to catch any late rendering
   setTimeout(reportHeight, 300);
 <\/script>
 </body>
 </html>`;
   }
 
-  // ── Preview renderer ──────────────────────────────────────
   function renderPreview(items, courseName, accentColor, textColor) {
     textColor = textColor || "#ffffff";
     const today = new Date();
     const wrap = $('previewWrap');
-
-    // Find items due this week for preview
     const mon = getMondayOf(today);
     const sun = new Date(mon); sun.setDate(mon.getDate() + 6); sun.setHours(23,59,59,999);
-
-    const weekItems = items.filter(i => {
-      const d = new Date(i.dueAt);
-      return d >= mon && d <= sun;
-    });
-
+    const weekItems = items.filter(i => { const d = new Date(i.dueAt); return d >= mon && d <= sun; });
     const previewItems = weekItems.length > 0 ? weekItems : items.slice(0, 3);
     const label = weekItems.length > 0 ? 'This week' : 'Sample (showing first items)';
-
     const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-
     function fmtDT(iso) {
       const d = new Date(iso);
       const h = d.getHours(); const m = d.getMinutes();
@@ -952,42 +749,20 @@
       const mStr = m === 0 ? '' : ':' + String(m).padStart(2,'0');
       return DAYS[d.getDay()] + ', ' + MONTHS[d.getMonth()] + '\u00a0' + d.getDate() + ' at ' + h12 + mStr + '\u00a0' + ampm;
     }
-
     function typeIcon(type) {
       if (type === 'quiz') return '✅';
       if (type === 'discussion') return '💬';
       return '📝';
     }
-
     let itemsHtml = '';
     if (previewItems.length === 0) {
       itemsHtml = `<div style="text-align:center;padding:16px;color:#9a9a8e;font-size:13px;">✔️ <strong style="display:block;color:#5a5a4e">Nothing due this week</strong><span style="font-size:12px">Keep up with your reading and lecture materials</span></div>`;
     } else {
       previewItems.forEach(item => {
-        itemsHtml += `<div style="display:flex;align-items:flex-start;gap:10px;padding:8px 12px;background:#f8f7f3;border-radius:6px;border-left:3px solid ${accentColor};margin-bottom:6px">
-          <span style="font-size:14px;flex-shrink:0;padding-top:1px">${typeIcon(item.type)}</span>
-          <div>
-            <div style="font-size:13px;font-weight:500;color:#1a1a14;line-height:1.3">${escHtml(item.title)}</div>
-            <div style="font-size:11px;color:#7a7a6e;margin-top:2px">Due ${fmtDT(item.dueAt)}</div>
-          </div>
-        </div>`;
+        itemsHtml += `<div style="display:flex;align-items:flex-start;gap:10px;padding:8px 12px;background:#f8f7f3;border-radius:6px;border-left:3px solid ${accentColor};margin-bottom:6px"><span style="font-size:14px;flex-shrink:0;padding-top:1px">${typeIcon(item.type)}</span><div><div style="font-size:13px;font-weight:500;color:#1a1a14;line-height:1.3">${escHtml(item.title)}</div><div style="font-size:11px;color:#7a7a6e;margin-top:2px">Due ${fmtDT(item.dueAt)}</div></div></div>`;
       });
     }
-
-    wrap.innerHTML = `
-      <div style="background:#fff;border:1px solid #e2e0d8;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06);width:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
-        <div style="background:${accentColor};padding:16px 18px;display:flex;align-items:center;justify-content:space-between">
-          <div style="display:flex;align-items:center;gap:10px">
-            <span style="font-size:18px;font-weight:600;color:' + (textColor || '#ffffff') + '">${escHtml(courseName)}</span>
-            <span style="background:rgba(255,255,255,0.2);color:#fff;font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px">Week Card Preview</span>
-          </div>
-          <span style="font-size:11px;color:rgba(255,255,255,0.65)">${label}</span>
-        </div>
-        <div style="padding:16px 18px">
-          <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;color:#9a9a8e;margin-bottom:10px">${previewItems.length > 0 ? (previewItems[0].moduleName || 'This Week') : 'This Week'}</div>
-          ${itemsHtml}
-        </div>
-      </div>`;
+    wrap.innerHTML = `<div style="background:#fff;border:1px solid #e2e0d8;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06);width:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"><div style="background:${accentColor};padding:16px 18px;display:flex;align-items:center;justify-content:space-between"><div style="display:flex;align-items:center;gap:10px"><span style="font-size:18px;font-weight:600;color:${textColor}">${escHtml(courseName)}</span><span style="background:rgba(255,255,255,0.2);color:#fff;font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px">Week Card Preview</span></div><span style="font-size:11px;color:rgba(255,255,255,0.65)">${label}</span></div><div style="padding:16px 18px"><div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;color:#9a9a8e;margin-bottom:10px">${previewItems.length > 0 ? (previewItems[0].moduleName || 'This Week') : 'This Week'}</div>${itemsHtml}</div></div>`;
   }
 
   function getMondayOf(d) {
@@ -1003,7 +778,6 @@
     return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
-  // ── Download ──────────────────────────────────────────────
   function downloadCard() {
     if (!generatedCardHtml) return;
     const filename = $('fileName').value.trim() || 'course-card.html';
