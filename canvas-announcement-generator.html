@@ -6,9 +6,7 @@
 <title>Canvas Announcement Generator</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
-
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   :root {
     --navy: #1e2d3d;
     --navy-light: #2d3f52;
@@ -29,7 +27,6 @@
     --radius: 10px;
     --radius-sm: 6px;
   }
-
   body {
     font-family: 'DM Sans', sans-serif;
     background: var(--bg);
@@ -37,7 +34,6 @@
     min-height: 100vh;
     padding: 0;
   }
-
   header {
     background: var(--navy);
     padding: 20px 32px;
@@ -45,7 +41,6 @@
     align-items: center;
     gap: 14px;
   }
-
   .header-icon {
     width: 36px; height: 36px;
     background: var(--accent);
@@ -53,20 +48,17 @@
     display: flex; align-items: center; justify-content: center;
     font-size: 18px;
   }
-
   header h1 {
     font-size: 16px;
     font-weight: 600;
     color: #ffffff;
     letter-spacing: -0.2px;
   }
-
   header p {
     font-size: 12px;
     color: #8a9fb5;
     margin-top: 1px;
   }
-
   .main {
     max-width: 760px;
     margin: 0 auto;
@@ -75,14 +67,12 @@
     flex-direction: column;
     gap: 20px;
   }
-
   .card {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     overflow: hidden;
   }
-
   .card-header {
     background: #f8fafc;
     border-bottom: 1px solid var(--border);
@@ -91,7 +81,6 @@
     align-items: center;
     gap: 10px;
   }
-
   .card-header .step {
     width: 22px; height: 22px;
     background: var(--navy);
@@ -102,13 +91,11 @@
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
   }
-
   .card-header h2 {
     font-size: 14px;
     font-weight: 600;
     color: var(--text);
   }
-
   .card-header .badge {
     margin-left: auto;
     font-size: 11px;
@@ -119,14 +106,11 @@
     padding: 2px 8px;
     border-radius: 20px;
   }
-
   .card-body {
     padding: 20px;
   }
-
   .field { margin-bottom: 16px; }
   .field:last-child { margin-bottom: 0; }
-
   label {
     display: block;
     font-size: 12px;
@@ -136,7 +120,6 @@
     letter-spacing: 0.5px;
     margin-bottom: 6px;
   }
-
   input[type="text"],
   input[type="password"],
   input[type="date"],
@@ -153,7 +136,6 @@
     outline: none;
     transition: border-color 0.15s;
   }
-
   input[type="text"]:focus,
   input[type="password"]:focus,
   input[type="date"]:focus,
@@ -162,33 +144,27 @@
     border-color: var(--accent);
     box-shadow: 0 0 0 3px rgba(74,144,217,0.12);
   }
-
   input.mono {
     font-family: 'DM Mono', monospace;
     font-size: 13px;
   }
-
   .hint {
     font-size: 12px;
     color: var(--text-muted);
     margin-top: 5px;
     line-height: 1.5;
   }
-
   .hint a { color: var(--accent); text-decoration: none; }
-
   .two-col {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 16px;
   }
-
   textarea {
     resize: vertical;
     min-height: 130px;
     line-height: 1.6;
   }
-
   .template-preview {
     background: #f8fafc;
     border: 1px solid var(--border);
@@ -196,7 +172,6 @@
     padding: 14px 16px;
     margin-top: 12px;
   }
-
   .template-preview .preview-label {
     font-size: 11px;
     font-weight: 600;
@@ -205,7 +180,6 @@
     color: var(--text-muted);
     margin-bottom: 10px;
   }
-
   .tpl-row {
     display: flex;
     gap: 10px;
@@ -213,7 +187,6 @@
     align-items: flex-start;
     font-size: 13px;
   }
-
   .tpl-day {
     font-weight: 600;
     color: var(--accent);
@@ -221,12 +194,10 @@
     flex-shrink: 0;
     padding-top: 1px;
   }
-
   .tpl-msg {
     color: var(--text-mid);
     line-height: 1.5;
   }
-
   .announcement-list {
     display: flex;
     flex-direction: column;
@@ -235,7 +206,6 @@
     overflow-y: auto;
     padding-right: 4px;
   }
-
   .ann-item {
     display: flex;
     align-items: flex-start;
@@ -246,7 +216,6 @@
     background: #fafbfc;
     font-size: 13px;
   }
-
   .ann-date {
     font-family: 'DM Mono', monospace;
     font-size: 11px;
@@ -256,19 +225,16 @@
     width: 80px;
     flex-shrink: 0;
   }
-
   .ann-title {
     font-weight: 500;
     color: var(--text);
     margin-bottom: 2px;
   }
-
   .ann-body {
     color: var(--text-mid);
     line-height: 1.4;
     font-size: 12px;
   }
-
   .day-tag {
     font-size: 10px;
     font-weight: 600;
@@ -279,18 +245,15 @@
     flex-shrink: 0;
     margin-top: 2px;
   }
-
   .day-wed { background: #e8f0fe; color: #3b5cb8; }
   .day-fri { background: #fef3e8; color: #b85c3b; }
   .day-sat { background: #f3e8fe; color: #7c3bb8; }
-
   .actions {
     display: flex;
     gap: 10px;
     align-items: center;
     flex-wrap: wrap;
   }
-
   .btn {
     padding: 10px 20px;
     border-radius: var(--radius-sm);
@@ -301,35 +264,28 @@
     border: none;
     transition: all 0.15s;
   }
-
   .btn-primary {
     background: var(--navy);
     color: #fff;
   }
-
   .btn-primary:hover { background: var(--navy-light); }
   .btn-primary:disabled { background: #a0adb8; cursor: not-allowed; }
-
   .btn-outline {
     background: transparent;
     color: var(--text-mid);
     border: 1px solid var(--border);
   }
-
   .btn-outline:hover { background: var(--bg); }
-
   .btn-danger {
     background: var(--danger-soft);
     color: var(--danger);
     border: 1px solid #f5c6c6;
   }
-
   .count-note {
     font-size: 12px;
     color: var(--text-muted);
     margin-left: auto;
   }
-
   .alert {
     padding: 12px 16px;
     border-radius: var(--radius-sm);
@@ -337,20 +293,16 @@
     line-height: 1.5;
     display: none;
   }
-
   .alert.show { display: block; }
   .alert-success { background: var(--success-soft); color: var(--success); border: 1px solid #a7d4bb; }
   .alert-danger { background: var(--danger-soft); color: var(--danger); border: 1px solid #f5c6c6; }
   .alert-info { background: var(--accent-soft); color: #1a4f7a; border: 1px solid #b3d4f0; }
   .alert-warning { background: var(--warning-soft); color: var(--warning); border: 1px solid #f5d78a; }
-
   .progress-wrap {
     display: none;
     margin-top: 12px;
   }
-
   .progress-wrap.show { display: block; }
-
   .progress-bar-bg {
     background: var(--bg);
     border: 1px solid var(--border);
@@ -359,7 +311,6 @@
     overflow: hidden;
     margin-bottom: 6px;
   }
-
   .progress-bar-fill {
     height: 100%;
     background: var(--accent);
@@ -367,18 +318,14 @@
     transition: width 0.3s;
     width: 0%;
   }
-
   .progress-text {
     font-size: 12px;
     color: var(--text-muted);
   }
-
   .toggle-pw {
     position: relative;
   }
-
   .toggle-pw input { padding-right: 40px; }
-
   .toggle-pw button {
     position: absolute;
     right: 10px;
@@ -391,7 +338,6 @@
     font-size: 13px;
     padding: 0;
   }
-
   .section-note {
     font-size: 13px;
     color: var(--text-mid);
@@ -402,21 +348,18 @@
     margin-bottom: 16px;
     line-height: 1.5;
   }
-
   .empty-state {
     text-align: center;
     padding: 30px 20px;
     color: var(--text-muted);
     font-size: 13px;
   }
-
   ::-webkit-scrollbar { width: 5px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
 </style>
 </head>
 <body>
-
 <header>
   <div class="header-icon">📢</div>
   <div>
@@ -424,9 +367,7 @@
     <p>Build and schedule an entire semester of announcements in one click</p>
   </div>
 </header>
-
 <div class="main">
-
   <!-- STEP 1: Canvas Credentials -->
   <div class="card">
     <div class="card-header">
@@ -455,7 +396,6 @@
       </div>
     </div>
   </div>
-
   <!-- STEP 2: Semester Dates -->
   <div class="card">
     <div class="card-header">
@@ -488,7 +428,6 @@
       </div>
     </div>
   </div>
-
   <!-- STEP 3: Announcement Days + Messages -->
   <div class="card">
     <div class="card-header">
@@ -507,7 +446,6 @@
       <div id="messageBoxes" style="margin-top:20px; display:flex; flex-direction:column; gap:16px;"></div>
     </div>
   </div>
-
   <!-- STEP 4: Module Schedule -->
   <div class="card">
     <div class="card-header">
@@ -519,11 +457,10 @@
       <div class="field">
         <label>Weekly module assignments</label>
         <textarea id="moduleSchedule" placeholder="One line per week — examples:&#10;Week 1: Modules 1 and 2&#10;Week 2: Modules 3 and 4&#10;Week 3: Module 5&#10;Week 4: Modules 6, 7 and 8"></textarea>
-        <p class="hint">Each line = one week. Each line = one week. Announcements post on your selected days before that Sunday's 11:59 PM deadline.</p>
+        <p class="hint">Each line = one week. Announcements post on your selected days before that Sunday's 11:59 PM deadline.</p>
       </div>
     </div>
   </div>
-
   <!-- STEP 5: Preview -->
   <div class="card">
     <div class="card-header">
@@ -541,7 +478,6 @@
       </div>
     </div>
   </div>
-
   <!-- STEP 6: Send to Canvas -->
   <div class="card">
     <div class="card-header">
@@ -563,12 +499,16 @@
       <div id="alertSend" class="alert" style="margin-top:12px"></div>
     </div>
   </div>
-
 </div>
-
 <script>
   // ── Utility ──────────────────────────────────────────────
   const $ = id => document.getElementById(id);
+
+  // Parse a date string (YYYY-MM-DD) as LOCAL time, not UTC
+  function parseLocalDate(str) {
+    const [y, m, d] = str.split('-').map(Number);
+    return new Date(y, m - 1, d);
+  }
 
   // ── Day picker setup ─────────────────────────────────────
   const ALL_DAYS = [
@@ -579,10 +519,8 @@
     { id: 'Fri', label: 'Friday',    offset: -2, defaultMsg: 'Hi everyone,\n\n[modules] are due this Sunday, [date] — just 2 days away. If you haven\'t started yet, now is the time!\n\nHave a great weekend,\n— Your Instructor' },
     { id: 'Sat', label: 'Saturday',  offset: -1, defaultMsg: 'Hi everyone,\n\nLast reminder — [modules] are due tomorrow (Sunday) at 11:59 PM. Make sure you\'ve submitted everything before midnight!\n\nGood luck,\n— Your Instructor' },
   ];
-
   // Default selected days
   let selectedDays = new Set(['Wed', 'Fri', 'Sat']);
-
   function buildDayPicker() {
     const picker = $('dayPicker');
     picker.innerHTML = '';
@@ -600,18 +538,14 @@
       picker.appendChild(btn);
     });
   }
-
   function buildMessageBoxes() {
     const container = $('messageBoxes');
     const activeDays = ALL_DAYS.filter(d => selectedDays.has(d.id));
-
-    // Save existing values before rebuilding
     const saved = {};
     ALL_DAYS.forEach(d => {
       const el = $('msg_' + d.id);
       if (el) saved[d.id] = el.value;
     });
-
     container.innerHTML = '';
     activeDays.forEach((day, i) => {
       const field = document.createElement('div');
@@ -622,68 +556,35 @@
         <textarea id="msg_${day.id}" rows="4"></textarea>
       `;
       container.appendChild(field);
-      // Restore saved value or use default
       $('msg_' + day.id).value = saved[day.id] !== undefined ? saved[day.id] : day.defaultMsg;
     });
   }
-
-  // Initialize day picker and message boxes on load
   buildDayPicker();
   buildMessageBoxes();
-
   function togglePw() {
     const inp = $('apiToken');
     const btn = $('pwToggleBtn');
     if (inp.type === 'password') { inp.type = 'text'; btn.textContent = 'Hide'; }
     else { inp.type = 'password'; btn.textContent = 'Show'; }
   }
-
   function showAlert(id, type, msg) {
     const el = $(id);
     el.className = `alert alert-${type} show`;
     el.innerHTML = msg;
   }
-
   function hideAlert(id) {
     const el = $(id);
     el.className = 'alert';
     el.innerHTML = '';
   }
-
-  function dayName(d) {
-    return ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()];
-  }
-
   function monthName(d) {
     return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()];
   }
-
-  function fmtDate(d) {
-    return `${monthName(d)} ${d.getDate()}`;
-  }
-
-  function fmtFull(d) {
-    const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-    return `${days[d.getDay()]}, ${monthName(d)} ${d.getDate()}`;
-  }
-
-  // Advance date by N days
   function addDays(d, n) {
     const r = new Date(d);
     r.setDate(r.getDate() + n);
     return r;
   }
-
-  // Get Monday of week containing date d
-  function getMondayOf(d) {
-    const r = new Date(d);
-    const day = r.getDay(); // 0=Sun
-    const diff = (day === 0) ? -6 : 1 - day;
-    r.setDate(r.getDate() + diff);
-    return r;
-  }
-
-  // Parse module schedule text → array of {week, modules}
   function parseSchedule(text) {
     const lines = text.trim().split('\n').filter(l => l.trim());
     return lines.map((line, i) => {
@@ -692,11 +593,10 @@
       return { weekNum: i + 1, modules };
     });
   }
-
-  // Build announcements array from schedule + start date
-  function buildAnnouncements(schedule, startDate) {
+  function buildAnnouncements(schedule, startDateStr) {
     const announcements = [];
-    const start = new Date(startDate);
+    // Parse as LOCAL date to avoid UTC-offset shifting the day
+    const start = parseLocalDate(startDateStr);
 
     // Find the first Sunday on or after the start date
     const dayOfWeek = start.getDay(); // 0=Sun, 1=Mon, ... 6=Sat
@@ -704,11 +604,8 @@
     const firstSunday = addDays(start, daysUntilSunday);
 
     schedule.forEach(({ weekNum, modules }, idx) => {
-      const sunday = addDays(firstSunday, idx * 7); // Sunday = due date
-
+      const sunday = addDays(firstSunday, idx * 7);
       const shortDue = `${monthName(sunday)} ${sunday.getDate()} at 11:59 PM`;
-
-      // Build one announcement per selected day
       const activeDays = ALL_DAYS.filter(d => selectedDays.has(d.id));
       activeDays.forEach(day => {
         const annDate = addDays(sunday, day.offset);
@@ -723,50 +620,40 @@
         });
       });
     });
-
     return announcements;
   }
-
-  // Cloudflare Worker proxy URL
   const PROXY = 'https://dry-darkness-f6c2.agarner32.workers.dev';
-
   // Format date for Canvas API (uses local timezone automatically)
   function toCanvasDate(d, hour = 9) {
     const pad = n => String(n).padStart(2,'0');
     const target = new Date(d.getFullYear(), d.getMonth(), d.getDate(), hour, 0, 0);
-    const offsetMin = target.getTimezoneOffset(); // e.g. 420 for PDT, 480 for PST
+    const offsetMin = target.getTimezoneOffset();
     const sign = offsetMin <= 0 ? '+' : '-';
     const absOffset = Math.abs(offsetMin);
     const offsetHr = pad(Math.floor(absOffset / 60));
     const offsetMn = pad(absOffset % 60);
     return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(hour)}:00:00${sign}${offsetHr}:${offsetMn}`;
   }
-
   // ── Preview ───────────────────────────────────────────────
   let currentAnnouncements = [];
   let createdIds = [];
-
   function generatePreview() {
     hideAlert('alertPreview');
     const startDate = $('semesterStart').value;
     const scheduleText = $('moduleSchedule').value.trim();
-
     if (!startDate) return showAlert('alertPreview', 'warning', 'Please enter a semester start date.');
     if (!scheduleText) return showAlert('alertPreview', 'warning', 'Please enter your module schedule.');
-
     const schedule = parseSchedule(scheduleText);
     $('weekCount').textContent = `${schedule.length} week${schedule.length !== 1 ? 's' : ''}`;
-
     currentAnnouncements = buildAnnouncements(schedule, startDate);
-
     const list = $('previewList');
     list.innerHTML = '';
     $('previewCount').textContent = `${currentAnnouncements.length} announcements total`;
-
     currentAnnouncements.forEach(ann => {
       const item = document.createElement('div');
       item.className = 'ann-item';
-      const tagClass = ann.day === 'Wed' ? 'day-wed' : ann.day === 'Fri' ? 'day-fri' : 'day-sat';
+      const dayId = ann.day;
+      const tagClass = dayId === 'Wed' ? 'day-wed' : dayId === 'Fri' ? 'day-fri' : 'day-sat';
       item.innerHTML = `
         <span class="ann-date">${monthName(ann.date)} ${ann.date.getDate()}, ${ann.date.getFullYear()}</span>
         <span class="day-tag ${tagClass}">${ann.day}</span>
@@ -778,37 +665,31 @@
       list.appendChild(item);
     });
   }
-
   // ── Send to Canvas ────────────────────────────────────────
   async function sendToCanvas() {
     hideAlert('alertSend');
     const token  = $('apiToken').value.trim();
     const domain = $('canvasDomain').value.trim();
     const courseId = $('courseId').value.trim();
-
     if (!token)    return showAlert('alertSend', 'danger', 'Please enter your API token.');
     if (!domain)   return showAlert('alertSend', 'danger', 'Please enter your Canvas domain.');
     if (!courseId) return showAlert('alertSend', 'danger', 'Please enter your Course ID.');
-    if (currentAnnouncements.length === 0) return showAlert('alertSend', 'warning', 'Please generate a preview first (Step 4).');
-
+    if (currentAnnouncements.length === 0) return showAlert('alertSend', 'warning', 'Please generate a preview first (Step 5).');
     const btn = $('sendBtn');
     btn.disabled = true;
     btn.textContent = 'Sending...';
-
     const progress = $('progressWrap');
     const fill = $('progressFill');
     const pText = $('progressText');
     progress.classList.add('show');
     createdIds = [];
-
     const total = currentAnnouncements.length;
     let sent = 0;
     let errors = 0;
-
     for (const ann of currentAnnouncements) {
       try {
         const canvasUrl = `https://${domain}/api/v1/courses/${courseId}/discussion_topics`;
-        const res = await fetch(`https://dry-darkness-f6c2.agarner32.workers.dev?url=${encodeURIComponent(canvasUrl)}`, {
+        const res = await fetch(`${PROXY}?url=${encodeURIComponent(canvasUrl)}`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -822,7 +703,6 @@
             delayed_post_at: toCanvasDate(ann.date, parseInt($('releaseHour').value))
           })
         });
-
         if (res.ok) {
           const data = await res.json();
           createdIds.push(data.id);
@@ -836,46 +716,38 @@
         console.error('Network error:', e);
         errors++;
       }
-
       const pct = Math.round(((sent + errors) / total) * 100);
       fill.style.width = pct + '%';
       pText.textContent = `Sent ${sent + errors} of ${total}...`;
-
-      // Small delay to avoid rate limiting
       await new Promise(r => setTimeout(r, 300));
     }
-
     btn.disabled = false;
     btn.textContent = 'Send all announcements to Canvas';
-
     if (errors === 0) {
       showAlert('alertSend', 'success', `✓ All ${sent} announcements created successfully in Canvas! Check your Announcements section.`);
       $('deleteBtn').style.display = 'inline-block';
     } else if (sent > 0) {
-      showAlert('alertSend', 'warning', `⚠️ ${sent} announcements sent, but ${errors} failed. Check the browser console for details. Common cause: invalid token or course ID.`);
+      showAlert('alertSend', 'warning', `⚠️ ${sent} announcements sent, but ${errors} failed. Check the browser console for details.`);
       if (createdIds.length > 0) $('deleteBtn').style.display = 'inline-block';
     } else {
       showAlert('alertSend', 'danger', `✗ All requests failed. Please check:<br>• Your API token is correct<br>• Your Canvas domain is <code>${domain}</code><br>• Your Course ID is <code>${courseId}</code><br>• You have permission to post announcements in this course`);
     }
   }
-
-  // ── Delete generated announcements (for testing) ──────────
+  // ── Delete generated announcements ────────────────────────
   async function deleteAllAnnouncements() {
     if (createdIds.length === 0) return;
     if (!confirm(`Delete all ${createdIds.length} announcements that were just created? This cannot be undone.`)) return;
-
     const token    = $('apiToken').value.trim();
     const domain   = $('canvasDomain').value.trim();
     const courseId = $('courseId').value.trim();
     const btn = $('deleteBtn');
     btn.disabled = true;
     btn.textContent = 'Deleting...';
-
     let deleted = 0;
     for (const id of createdIds) {
       try {
         const delUrl = `https://${domain}/api/v1/courses/${courseId}/discussion_topics/${id}`;
-        await fetch(`https://dry-darkness-f6c2.agarner32.workers.dev?url=${encodeURIComponent(delUrl)}`, {
+        await fetch(`${PROXY}?url=${encodeURIComponent(delUrl)}`, {
           method: 'DELETE',
           headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -883,14 +755,12 @@
       } catch(e) { console.error(e); }
       await new Promise(r => setTimeout(r, 200));
     }
-
     createdIds = [];
     btn.style.display = 'none';
     btn.disabled = false;
     btn.textContent = 'Delete all generated announcements';
     showAlert('alertSend', 'info', `✓ Deleted ${deleted} test announcements from Canvas.`);
   }
-
   // ── Live week counter ─────────────────────────────────────
   $('moduleSchedule').addEventListener('input', () => {
     const lines = $('moduleSchedule').value.trim().split('\n').filter(l => l.trim());
