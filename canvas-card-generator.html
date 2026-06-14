@@ -807,7 +807,7 @@
 
     // Before semester — only show if today is more than 7 days before the first due date
     const sevenDaysBefore = new Date(firstDue);
-    sevenDaysBefore.setDate(sevenDaysBefore.getDate() - 7);
+    sevenDaysBefore.setDate(sevenDaysBefore.getDate() - 0);
     if (today < sevenDaysBefore) {
       root.innerHTML = \`
         <div class="card-header">
