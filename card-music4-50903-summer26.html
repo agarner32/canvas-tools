@@ -6,7 +6,7 @@
 <title>Music 4 - &quot;Exploring Music&quot; — Week Card</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background:transparent; }
+  body { -family: -apple-system, BlinkMacSystem, 'Segoe UI', sans-serif; background:transparent; }
 
   .card {
     background: #ffffff;
@@ -28,8 +28,8 @@
   .header-left { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; }
 
   .course-name {
-    font-size: 18px;
-    font-weight: 600;
+    -size: 18px;
+    -weight: 600;
     color: #000000;
     letter-spacing: 0.2px;
     text-align: center;
@@ -38,24 +38,25 @@
   .week-pill {
     background: rgba(0,0,0,0.15);
     color: #000000;
-    font-size: 11px;
-    font-weight: 600;
+    -size: 11px;
+    -weight: 600;
     padding: 3px 9px;
     border-radius: 20px;
     letter-spacing: 0.5px;
   }
 
   .date-range {
-    font-size: 11px;
+    -size: 11px;
     color: #000000;
     opacity: 0.75;
+   white-space: nowrap;
   }
 
   .card-body { padding: 16px 18px; }
 
   .module-label {
-    font-size: 11px;
-    font-weight: 600;
+    -size: 11px;
+    -weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.8px;
     color: #9a9a8e;
@@ -74,19 +75,19 @@
     border-left: 3px solid #8db48e;
   }
 
-  .due-item-icon { font-size: 14px; flex-shrink: 0; padding-top: 1px; }
+  .due-item-icon { -size: 14px; flex-shrink: 0; padding-top: 1px; }
 
   .due-item-text { flex: 1; }
 
   .due-item-title {
-    font-size: 13px;
-    font-weight: 500;
+    -size: 13px;
+    -weight: 500;
     color: #1a1a14;
     line-height: 1.3;
   }
 
   .due-item-date {
-    font-size: 11px;
+    -size: 11px;
     color: #7a7a6e;
     margin-top: 2px;
   }
@@ -97,18 +98,18 @@
     color: #9a9a8e;
   }
 
-  .nothing-due .check { font-size: 22px; margin-bottom: 6px; }
-  .nothing-due .msg { font-size: 14px; font-weight: 500; color: #5a5a4e; margin-bottom: 3px; }
-  .nothing-due .sub { font-size: 12px; color: #9a9a8e; }
+  .nothing-due .check { -size: 22px; margin-bottom: 6px; }
+  .nothing-due .msg { -size: 14px; -weight: 500; color: #5a5a4e; margin-bottom: 3px; }
+  .nothing-due .sub { -size: 12px; color: #9a9a8e; }
 
   .state-card {
     text-align: center;
     padding: 20px;
   }
 
-  .state-card .icon { font-size: 26px; margin-bottom: 8px; }
-  .state-card .msg { font-size: 15px; font-weight: 500; color: #1a1a14; margin-bottom: 4px; }
-  .state-card .sub { font-size: 12px; color: #9a9a8e; }
+  .state-card .icon { -size: 26px; margin-bottom: 8px; }
+  .state-card .msg { -size: 15px; -weight: 500; color: #1a1a14; margin-bottom: 4px; }
+  .state-card .sub { -size: 12px; color: #9a9a8e; }
 
   .multi-module { margin-bottom: 14px; }
   .multi-module:last-child { margin-bottom: 0; }
@@ -117,7 +118,7 @@
 </head>
 <body>
 <div class="card" id="root">
-  <div style="padding:16px; font-size:13px; color:#999; font-family:sans-serif">Loading...</div>
+  <div style="padding:16px; -size:13px; color:#999; -family:sans-serif">Loading...</div>
 </div>
 
 <script>
