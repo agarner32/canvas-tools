@@ -382,166 +382,140 @@
     // Store ALL dynamic data as JSON — completely safe regardless of special characters
     const payload = JSON.stringify({ items, courseName, accentColor, textColor });
 
-    return `<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Week Card</title>
-<style>
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background:transparent; }
-  .card { background:#fff; border:1px solid #e2e0d8; border-radius:12px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,.06); max-width:680px; }
-  .card-header { padding:16px 18px; display:flex; align-items:center; justify-content:center; }
-  .header-left { display:flex; align-items:center; justify-content:center; gap:10px; width:100%; }
-  .course-name { font-size:18px; font-weight:600; letter-spacing:.2px; text-align:center; }
-  .week-pill { background:rgba(0,0,0,.15); font-size:11px; font-weight:600; padding:3px 9px; border-radius:20px; letter-spacing:.5px; }
-  .date-range { font-size:11px; opacity:.75; }
-  .card-body { padding:16px 18px; }
-  .module-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.8px; color:#9a9a8e; margin-bottom:10px; }
-  .items-list { display:flex; flex-direction:column; gap:7px; }
-  .due-item { display:flex; align-items:flex-start; gap:10px; padding:8px 12px; background:#f8f7f3; border-radius:6px; }
-  .due-item-icon { font-size:14px; flex-shrink:0; padding-top:1px; }
-  .due-item-text { flex:1; }
-  .due-item-title { font-size:13px; font-weight:500; color:#1a1a14; line-height:1.3; }
-  .due-item-date { font-size:11px; color:#7a7a6e; margin-top:2px; }
-  .nothing-due { text-align:center; padding:16px 12px; color:#9a9a8e; }
-  .nothing-due .check { font-size:22px; margin-bottom:6px; }
-  .nothing-due .msg { font-size:14px; font-weight:500; color:#5a5a4e; margin-bottom:3px; }
-  .nothing-due .sub { font-size:12px; }
-  .state-card { text-align:center; padding:20px; }
-  .state-card .icon { font-size:26px; margin-bottom:8px; }
-  .state-card .msg { font-size:15px; font-weight:500; color:#1a1a14; margin-bottom:4px; }
-  .state-card .sub { font-size:12px; color:#9a9a8e; }
-  .multi-module { margin-bottom:14px; }
-  .multi-module:last-child { margin-bottom:0; }
-  .multi-module .module-label { margin-bottom:7px; }
-</style>
-</head>
-<body>
-<div class="card" id="root">
-  <div style="padding:16px;font-size:13px;color:#999">Loading...</div>
-</div>
-<textarea id="card-data" style="display:none">${payload}</textarea>
-<script>
-(function() {
-  var raw = document.getElementById('card-data').value;
-  var config = JSON.parse(raw);
-  var ITEMS = config.items;
-  var COURSE_NAME = config.courseName;
-  var ACCENT = config.accentColor;
-  var TEXT_COLOR = config.textColor;
-
-  // Apply dynamic CSS that depends on accent/text color
-  var style = document.createElement('style');
-  style.textContent = '.card-header { background:' + ACCENT + '; } .course-name { color:' + TEXT_COLOR + '; } .week-pill { color:' + TEXT_COLOR + '; } .date-range { color:' + TEXT_COLOR + '; } .due-item { border-left:3px solid ' + ACCENT + '; }';
-  document.head.appendChild(style);
-
-  var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  var DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-
-  function fmtDate(d) { return MONTHS[d.getMonth()] + '\u00a0' + d.getDate() + ', ' + d.getFullYear(); }
-
-  function fmtDateTime(iso) {
-    var d = new Date(iso);
-    var h = d.getHours(), m = d.getMinutes();
-    var ampm = h >= 12 ? 'PM' : 'AM';
-    var h12 = h % 12 || 12;
-    var mStr = m === 0 ? '' : ':' + String(m).padStart(2,'0');
-    return DAYS[d.getDay()] + ', ' + MONTHS[d.getMonth()] + '\u00a0' + d.getDate() + ' at ' + h12 + mStr + '\u00a0' + ampm;
-  }
-
-  function getWeekBounds(today) {
-    var d = new Date(today);
-    var day = d.getDay();
-    var diffToMon = day === 0 ? -6 : 1 - day;
-    var mon = new Date(d); mon.setDate(d.getDate() + diffToMon); mon.setHours(0,0,0,0);
-    var sun = new Date(mon); sun.setDate(mon.getDate() + 6); sun.setHours(23,59,59,999);
-    return { mon: mon, sun: sun };
-  }
-
-  function fmtWeekRange(mon, sun) {
-    if (mon.getMonth() === sun.getMonth()) return MONTHS[mon.getMonth()] + '\u00a0' + mon.getDate() + '\u2013' + sun.getDate();
-    return MONTHS[mon.getMonth()] + '\u00a0' + mon.getDate() + ' \u2013 ' + MONTHS[sun.getMonth()] + '\u00a0' + sun.getDate();
-  }
-
-  function typeIcon(type) {
-    if (type === 'quiz') return '\u2705';
-    if (type === 'discussion') return '\uD83D\uDCAC';
-    return '\uD83D\uDCDD';
-  }
-
-  function getWeekNumber(today, allDates) {
-    var sorted = allDates.slice().sort(function(a,b){ return new Date(a) - new Date(b); });
-    var first = new Date(sorted[0]);
-    var day = first.getDay();
-    var diffToMon = day === 0 ? -6 : 1 - day;
-    var firstMon = new Date(first); firstMon.setDate(first.getDate() + diffToMon); firstMon.setHours(0,0,0,0);
-    return Math.floor((today.getTime() - firstMon.getTime()) / (7 * 24 * 60 * 60 * 1000)) + 1;
-  }
-
-  function escHtml(str) {
-    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-
-  function render() {
-    var root = document.getElementById('root');
-    var today = new Date();
-    var bounds = getWeekBounds(today);
-    var mon = bounds.mon, sun = bounds.sun;
-    var weekRange = fmtWeekRange(mon, sun);
-    var allDates = ITEMS.map(function(i){ return i.dueAt; });
-    var firstDue = new Date(Math.min.apply(null, allDates.map(function(d){ return new Date(d); })));
-    var lastDue  = new Date(Math.max.apply(null, allDates.map(function(d){ return new Date(d); })));
-
-    if (today < firstDue) {
-      root.innerHTML = '<div class="card-header"><div class="header-left"><span class="course-name">' + escHtml(COURSE_NAME) + '</span></div></div><div class="card-body"><div class="state-card"><div class="icon">\uD83D\uDCC5</div><div class="msg">Course begins soon</div><div class="sub">First item due ' + fmtDate(firstDue) + '</div></div></div>';
-      return;
-    }
-
-    if (today > lastDue) {
-      root.innerHTML = '<div class="card-header"><div class="header-left"><span class="course-name">' + escHtml(COURSE_NAME) + '</span></div></div><div class="card-body"><div class="state-card"><div class="icon">\u2713</div><div class="msg">Semester complete</div><div class="sub">Great work this semester!</div></div></div>';
-      return;
-    }
-
-    var weekItems = ITEMS.filter(function(i){ var d = new Date(i.dueAt); return d >= mon && d <= sun; });
-    var weekNum = getWeekNumber(today, allDates);
-    var headerHtml = '<div class="card-header"><div class="header-left"><span class="course-name">' + escHtml(COURSE_NAME) + '</span><span class="week-pill">Week ' + weekNum + '</span></div><span class="date-range">' + weekRange + '</span></div>';
-
-    if (weekItems.length === 0) {
-      root.innerHTML = headerHtml + '<div class="card-body"><div class="nothing-due"><div class="check">\u2714\uFE0F</div><div class="msg">Nothing due this week</div><div class="sub">Keep up with your reading and lecture materials</div></div></div>';
-      return;
-    }
-
-    var byModule = {};
-    weekItems.forEach(function(item){ if (!byModule[item.moduleName]) byModule[item.moduleName] = []; byModule[item.moduleName].push(item); });
-    var moduleNames = Object.keys(byModule);
-    var multiModule = moduleNames.length > 1;
-    var bodyHtml = '<div class="card-body">';
-    moduleNames.forEach(function(modName) {
-      var modItems = byModule[modName];
-      if (multiModule) bodyHtml += '<div class="multi-module">';
-      bodyHtml += '<div class="module-label">' + escHtml(modName) + '</div><div class="items-list">';
-      modItems.forEach(function(item) {
-        bodyHtml += '<div class="due-item"><div class="due-item-icon">' + typeIcon(item.type) + '</div><div class="due-item-text"><div class="due-item-title">' + escHtml(item.title) + '</div><div class="due-item-date">Due ' + fmtDateTime(item.dueAt) + '</div></div></div>';
-      });
-      bodyHtml += '</div>';
-      if (multiModule) bodyHtml += '</div>';
-    });
-    bodyHtml += '</div>';
-    root.innerHTML = headerHtml + bodyHtml;
-  }
-
-  render();
-
-  function reportHeight() { window.parent.postMessage({ iframeHeight: document.body.scrollHeight }, '*'); }
-  reportHeight();
-  window.addEventListener('resize', reportHeight);
-  setTimeout(reportHeight, 300);
-})();
-</script>
-</body>
-</html>`;
+    var parts = [];
+    parts.push('<!DOCTYPE html>');
+    parts.push('<html lang="en"><head>');
+    parts.push('<meta charset="UTF-8">');
+    parts.push('<meta name="viewport" content="width=device-width, initial-scale=1.0">');
+    parts.push('<title>Week Card</title>');
+    parts.push('<style>');
+    parts.push('* { margin:0; padding:0; box-sizing:border-box; }');
+    parts.push('body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background:transparent; }');
+    parts.push('.card { background:#fff; border:1px solid #e2e0d8; border-radius:12px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,.06); max-width:680px; }');
+    parts.push('.card-header { padding:16px 18px; display:flex; align-items:center; justify-content:center; }');
+    parts.push('.header-left { display:flex; align-items:center; justify-content:center; gap:10px; width:100%; }');
+    parts.push('.course-name { font-size:18px; font-weight:600; letter-spacing:.2px; text-align:center; }');
+    parts.push('.week-pill { background:rgba(0,0,0,.15); font-size:11px; font-weight:600; padding:3px 9px; border-radius:20px; letter-spacing:.5px; }');
+    parts.push('.date-range { font-size:11px; opacity:.75; }');
+    parts.push('.card-body { padding:16px 18px; }');
+    parts.push('.module-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.8px; color:#9a9a8e; margin-bottom:10px; }');
+    parts.push('.items-list { display:flex; flex-direction:column; gap:7px; }');
+    parts.push('.due-item { display:flex; align-items:flex-start; gap:10px; padding:8px 12px; background:#f8f7f3; border-radius:6px; }');
+    parts.push('.due-item-icon { font-size:14px; flex-shrink:0; padding-top:1px; }');
+    parts.push('.due-item-text { flex:1; }');
+    parts.push('.due-item-title { font-size:13px; font-weight:500; color:#1a1a14; line-height:1.3; }');
+    parts.push('.due-item-date { font-size:11px; color:#7a7a6e; margin-top:2px; }');
+    parts.push('.nothing-due { text-align:center; padding:16px 12px; color:#9a9a8e; }');
+    parts.push('.nothing-due .check { font-size:22px; margin-bottom:6px; }');
+    parts.push('.nothing-due .msg { font-size:14px; font-weight:500; color:#5a5a4e; margin-bottom:3px; }');
+    parts.push('.nothing-due .sub { font-size:12px; }');
+    parts.push('.state-card { text-align:center; padding:20px; }');
+    parts.push('.state-card .icon { font-size:26px; margin-bottom:8px; }');
+    parts.push('.state-card .msg { font-size:15px; font-weight:500; color:#1a1a14; margin-bottom:4px; }');
+    parts.push('.state-card .sub { font-size:12px; color:#9a9a8e; }');
+    parts.push('.multi-module { margin-bottom:14px; }');
+    parts.push('.multi-module:last-child { margin-bottom:0; }');
+    parts.push('.multi-module .module-label { margin-bottom:7px; }');
+    parts.push('</style></head><body>');
+    parts.push('<div class="card" id="root"><div style="padding:16px;font-size:13px;color:#999">Loading...</div></div>');
+    parts.push('<textarea id="card-data" style="display:none">' + payload + '</textarea>');
+    parts.push('<' + 'script>');
+    parts.push('(function() {');
+    parts.push('  var raw = document.getElementById("card-data").value;');
+    parts.push('  var config = JSON.parse(raw);');
+    parts.push('  var ITEMS = config.items;');
+    parts.push('  var COURSE_NAME = config.courseName;');
+    parts.push('  var ACCENT = config.accentColor;');
+    parts.push('  var TEXT_COLOR = config.textColor;');
+    parts.push('  var style = document.createElement("style");');
+    parts.push('  style.textContent = ".card-header { background:" + ACCENT + "; } .course-name { color:" + TEXT_COLOR + "; } .week-pill { color:" + TEXT_COLOR + "; } .date-range { color:" + TEXT_COLOR + "; } .due-item { border-left:3px solid " + ACCENT + "; }";');
+    parts.push('  document.head.appendChild(style);');
+    parts.push('  var MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];');
+    parts.push('  var DAYS = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];');
+    parts.push('  function fmtDate(d) { return MONTHS[d.getMonth()] + "\u00a0" + d.getDate() + ", " + d.getFullYear(); }');
+    parts.push('  function fmtDateTime(iso) {');
+    parts.push('    var d = new Date(iso); var h = d.getHours(), m = d.getMinutes();');
+    parts.push('    var ampm = h >= 12 ? "PM" : "AM"; var h12 = h % 12 || 12;');
+    parts.push('    var mStr = m === 0 ? "" : ":" + String(m).padStart(2,"0");');
+    parts.push('    return DAYS[d.getDay()] + ", " + MONTHS[d.getMonth()] + "\u00a0" + d.getDate() + " at " + h12 + mStr + "\u00a0" + ampm;');
+    parts.push('  }');
+    parts.push('  function getWeekBounds(today) {');
+    parts.push('    var d = new Date(today); var day = d.getDay();');
+    parts.push('    var diffToMon = day === 0 ? -6 : 1 - day;');
+    parts.push('    var mon = new Date(d); mon.setDate(d.getDate() + diffToMon); mon.setHours(0,0,0,0);');
+    parts.push('    var sun = new Date(mon); sun.setDate(mon.getDate() + 6); sun.setHours(23,59,59,999);');
+    parts.push('    return { mon: mon, sun: sun };');
+    parts.push('  }');
+    parts.push('  function fmtWeekRange(mon, sun) {');
+    parts.push('    if (mon.getMonth() === sun.getMonth()) return MONTHS[mon.getMonth()] + "\u00a0" + mon.getDate() + "\u2013" + sun.getDate();');
+    parts.push('    return MONTHS[mon.getMonth()] + "\u00a0" + mon.getDate() + " \u2013 " + MONTHS[sun.getMonth()] + "\u00a0" + sun.getDate();');
+    parts.push('  }');
+    parts.push('  function typeIcon(type) {');
+    parts.push('    if (type === "quiz") return "\u2705";');
+    parts.push('    if (type === "discussion") return "\uD83D\uDCAC";');
+    parts.push('    return "\uD83D\uDCDD";');
+    parts.push('  }');
+    parts.push('  function getWeekNumber(today, allDates) {');
+    parts.push('    var sorted = allDates.slice().sort(function(a,b){ return new Date(a) - new Date(b); });');
+    parts.push('    var first = new Date(sorted[0]); var day = first.getDay();');
+    parts.push('    var diffToMon = day === 0 ? -6 : 1 - day;');
+    parts.push('    var firstMon = new Date(first); firstMon.setDate(first.getDate() + diffToMon); firstMon.setHours(0,0,0,0);');
+    parts.push('    return Math.floor((today.getTime() - firstMon.getTime()) / (7 * 24 * 60 * 60 * 1000)) + 1;');
+    parts.push('  }');
+    parts.push('  function escHtml(str) {');
+    parts.push('    return String(str).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");');
+    parts.push('  }');
+    parts.push('  function render() {');
+    parts.push('    var root = document.getElementById("root");');
+    parts.push('    var today = new Date();');
+    parts.push('    var bounds = getWeekBounds(today);');
+    parts.push('    var mon = bounds.mon, sun = bounds.sun;');
+    parts.push('    var weekRange = fmtWeekRange(mon, sun);');
+    parts.push('    var allDates = ITEMS.map(function(i){ return i.dueAt; });');
+    parts.push('    var firstDue = new Date(Math.min.apply(null, allDates.map(function(d){ return new Date(d); })));');
+    parts.push('    var lastDue = new Date(Math.max.apply(null, allDates.map(function(d){ return new Date(d); })));');
+    parts.push('    if (today < firstDue) {');
+    parts.push('      root.innerHTML = "<div class=\"card-header\"><div class=\"header-left\"><span class=\"course-name\">" + escHtml(COURSE_NAME) + "</span></div></div><div class=\"card-body\"><div class=\"state-card\"><div class=\"icon\">\uD83D\uDCC5</div><div class=\"msg\">Course begins soon</div><div class=\"sub\">First item due " + fmtDate(firstDue) + "</div></div></div>";');
+    parts.push('      return;');
+    parts.push('    }');
+    parts.push('    if (today > lastDue) {');
+    parts.push('      root.innerHTML = "<div class=\"card-header\"><div class=\"header-left\"><span class=\"course-name\">" + escHtml(COURSE_NAME) + "</span></div></div><div class=\"card-body\"><div class=\"state-card\"><div class=\"icon\">\u2713</div><div class=\"msg\">Semester complete</div><div class=\"sub\">Great work this semester!</div></div></div>";');
+    parts.push('      return;');
+    parts.push('    }');
+    parts.push('    var weekItems = ITEMS.filter(function(i){ var d = new Date(i.dueAt); return d >= mon && d <= sun; });');
+    parts.push('    var weekNum = getWeekNumber(today, allDates);');
+    parts.push('    var headerHtml = "<div class=\"card-header\"><div class=\"header-left\"><span class=\"course-name\">" + escHtml(COURSE_NAME) + "</span><span class=\"week-pill\">Week " + weekNum + "</span></div><span class=\"date-range\">" + weekRange + "</span></div>";');
+    parts.push('    if (weekItems.length === 0) {');
+    parts.push('      root.innerHTML = headerHtml + "<div class=\"card-body\"><div class=\"nothing-due\"><div class=\"check\">\u2714\uFE0F</div><div class=\"msg\">Nothing due this week</div><div class=\"sub\">Keep up with your reading and lecture materials</div></div></div>";');
+    parts.push('      return;');
+    parts.push('    }');
+    parts.push('    var byModule = {};');
+    parts.push('    weekItems.forEach(function(item){ if (!byModule[item.moduleName]) byModule[item.moduleName] = []; byModule[item.moduleName].push(item); });');
+    parts.push('    var moduleNames = Object.keys(byModule);');
+    parts.push('    var multiModule = moduleNames.length > 1;');
+    parts.push('    var bodyHtml = "<div class=\"card-body\">";');
+    parts.push('    moduleNames.forEach(function(modName) {');
+    parts.push('      var modItems = byModule[modName];');
+    parts.push('      if (multiModule) bodyHtml += "<div class=\"multi-module\">";');
+    parts.push('      bodyHtml += "<div class=\"module-label\">" + escHtml(modName) + "</div><div class=\"items-list\">";');
+    parts.push('      modItems.forEach(function(item) {');
+    parts.push('        bodyHtml += "<div class=\"due-item\"><div class=\"due-item-icon\">" + typeIcon(item.type) + "</div><div class=\"due-item-text\"><div class=\"due-item-title\">" + escHtml(item.title) + "</div><div class=\"due-item-date\">Due " + fmtDateTime(item.dueAt) + "</div></div></div>";');
+    parts.push('      });');
+    parts.push('      bodyHtml += "</div>";');
+    parts.push('      if (multiModule) bodyHtml += "</div>";');
+    parts.push('    });');
+    parts.push('    bodyHtml += "</div>";');
+    parts.push('    root.innerHTML = headerHtml + bodyHtml;');
+    parts.push('  }');
+    parts.push('  render();');
+    parts.push('  function reportHeight() { window.parent.postMessage({ iframeHeight: document.body.scrollHeight }, "*"); }');
+    parts.push('  reportHeight();');
+    parts.push('  window.addEventListener("resize", reportHeight);');
+    parts.push('  setTimeout(reportHeight, 300);');
+    parts.push('})();');
+    parts.push('<' + '/script>');
+    parts.push('</body></html>');
+    return parts.join('\n');
   }
 
   function renderPreview(items, courseName, accentColor, textColor) {
@@ -616,5 +590,3 @@
 </script>
 </body>
 </html>
-
-      
