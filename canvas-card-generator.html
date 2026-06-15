@@ -86,7 +86,7 @@
         <label>API Token</label>
         <div class="toggle-pw">
           <input type="password" id="apiToken" class="mono" placeholder="Paste your Canvas API token" style="width:100%" />
-          <button onclick="togglePw()">Show</button>
+          <button onclick="togglePw(this)">Show</button>
         </div>
         <p class="hint">Canvas → Account → Settings → Approved Integrations → + New Access Token</p>
       </div>
@@ -209,12 +209,14 @@
   window.addEventListener('DOMContentLoaded', function() {
     $('customColor').value = selectedColor;
     $('customColorPreview').style.background = selectedColor;
+    $('customTextColor').value = selectedTextColor;
+    $('customTextColorPreview').style.background = selectedTextColor;
   });
 
-  function togglePw() {
+  function togglePw(btn) {
     const inp = $('apiToken');
     inp.type = inp.type === 'password' ? 'text' : 'password';
-    event.target.textContent = inp.type === 'password' ? 'Show' : 'Hide';
+    btn.textContent = inp.type === 'password' ? 'Show' : 'Hide';
   }
 
   function selectColor(el) {
