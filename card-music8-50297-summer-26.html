@@ -1,132 +1,79 @@
-<!DOCTYPE html>
-<html lang="en"><head>
+<!DOCTYPE html><html lang="en"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Week Card</title>
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
-body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background:transparent; }
-.card { background:#fff; border:1px solid #e2e0d8; border-radius:12px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,.06); max-width:680px; }
-.card-header { padding:16px 18px; display:flex; align-items:center; justify-content:center; }
-.header-left { display:flex; align-items:center; justify-content:center; gap:10px; width:100%; }
-.course-name { font-size:18px; font-weight:600; letter-spacing:.2px; text-align:center; }
-.week-pill { background:rgba(0,0,0,.15); font-size:11px; font-weight:600; padding:3px 9px; border-radius:20px; letter-spacing:.5px; }
-.date-range { font-size:11px; opacity:.75; }
-.card-body { padding:16px 18px; }
-.module-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.8px; color:#9a9a8e; margin-bottom:10px; }
-.items-list { display:flex; flex-direction:column; gap:7px; }
-.due-item { display:flex; align-items:flex-start; gap:10px; padding:8px 12px; background:#f8f7f3; border-radius:6px; }
-.due-item-icon { font-size:14px; flex-shrink:0; padding-top:1px; }
-.due-item-text { flex:1; }
-.due-item-title { font-size:13px; font-weight:500; color:#1a1a14; line-height:1.3; }
-.due-item-date { font-size:11px; color:#7a7a6e; margin-top:2px; }
-.nothing-due { text-align:center; padding:16px 12px; color:#9a9a8e; }
-.nothing-due .check { font-size:22px; margin-bottom:6px; }
-.nothing-due .msg { font-size:14px; font-weight:500; color:#5a5a4e; margin-bottom:3px; }
-.nothing-due .sub { font-size:12px; }
-.state-card { text-align:center; padding:20px; }
-.state-card .icon { font-size:26px; margin-bottom:8px; }
-.state-card .msg { font-size:15px; font-weight:500; color:#1a1a14; margin-bottom:4px; }
-.state-card .sub { font-size:12px; color:#9a9a8e; }
-.multi-module { margin-bottom:14px; }
-.multi-module:last-child { margin-bottom:0; }
-.multi-module .module-label { margin-bottom:7px; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:transparent}
+.card{background:#fff;border:1px solid #e2e0d8;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06);max-width:680px}
+.ch{padding:16px 18px;display:flex;align-items:center;justify-content:center}
+.hl{display:flex;align-items:center;justify-content:center;gap:10px;width:100%}
+.cn{font-size:18px;font-weight:600;letter-spacing:.2px;text-align:center}
+.wp{background:rgba(0,0,0,.15);font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;letter-spacing:.5px}
+.dr{font-size:11px;opacity:.75}
+.cb{padding:16px 18px}
+.ml{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:#9a9a8e;margin-bottom:10px}
+.il{display:flex;flex-direction:column;gap:7px}
+.di{display:flex;align-items:flex-start;gap:10px;padding:8px 12px;background:#f8f7f3;border-radius:6px}
+.dii{font-size:14px;flex-shrink:0;padding-top:1px}
+.dit{flex:1}
+.dtt{font-size:13px;font-weight:500;color:#1a1a14;line-height:1.3}
+.dtd{font-size:11px;color:#7a7a6e;margin-top:2px}
+.nd{text-align:center;padding:16px 12px;color:#9a9a8e}
+.sc{text-align:center;padding:20px}
+.sc .si{font-size:26px;margin-bottom:8px}
+.sc .sm{font-size:15px;font-weight:500;color:#1a1a14;margin-bottom:4px}
+.sc .ss{font-size:12px;color:#9a9a8e}
+.mm{margin-bottom:14px}
+.mm:last-child{margin-bottom:0}
+.mm .ml{margin-bottom:7px}
 </style></head><body>
 <div class="card" id="root"><div style="padding:16px;font-size:13px;color:#999">Loading...</div></div>
-<textarea id="card-data" style="display:none">{"items":[{"moduleId":399528,"moduleName":"Module One:  Course Orientation and Overview","title":"A4: Module Overview Quiz","type":"assignment","dueAt":"2026-06-22T06:59:00Z"},{"moduleId":399528,"moduleName":"Module One:  Course Orientation and Overview","title":"B4: Canvas Basics Quiz","type":"assignment","dueAt":"2026-06-22T06:59:00Z"},{"moduleId":399528,"moduleName":"Module One:  Course Orientation and Overview","title":"C2:  Discussions Quiz","type":"assignment","dueAt":"2026-06-22T06:59:00Z"},{"moduleId":399528,"moduleName":"Module One:  Course Orientation and Overview","title":"E3:  Lab Assignment #1 Quiz","type":"assignment","dueAt":"2026-06-22T06:59:00Z"},{"moduleId":399529,"moduleName":"Module Two: Music Fundamentals Part 1","title":"2.1.1 Discussion #1","type":"discussion","dueAt":"2026-06-22T06:59:00Z"},{"moduleId":399529,"moduleName":"Module Two: Music Fundamentals Part 1","title":"2.2.2 Lecture 1 Quiz - What Is Jazz?","type":"assignment","dueAt":"2026-06-22T06:59:00Z"},{"moduleId":399529,"moduleName":"Module Two: Music Fundamentals Part 1","title":"2.2.4 Lecture 2 Quiz - Instruments In Jazz Part 1","type":"assignment","dueAt":"2026-06-22T06:59:00Z"},{"moduleId":399529,"moduleName":"Module Two: Music Fundamentals Part 1","title":"2.2.6 Lecture 3 Quiz - Instruments In Jazz Part 2","type":"assignment","dueAt":"2026-06-22T06:59:00Z"},{"moduleId":399529,"moduleName":"Module Two: Music Fundamentals Part 1","title":"2.4.2 Lab Assignment #2 - Quiz","type":"assignment","dueAt":"2026-06-22T06:59:00Z"},{"moduleId":399530,"moduleName":"Module Three: Music Fundamentals Part 2","title":"3.1.1 Discussion #2","type":"discussion","dueAt":"2026-06-22T06:59:00Z"},{"moduleId":399530,"moduleName":"Module Three: Music Fundamentals Part 2","title":"3.2.2 Lecture 4 Quiz - Melody","type":"assignment","dueAt":"2026-06-22T06:59:00Z"},{"moduleId":399530,"moduleName":"Module Three: Music Fundamentals Part 2","title":"3.2.4 Lecture 5 Quiz - Harmony","type":"assignment","dueAt":"2026-06-22T06:59:00Z"},{"moduleId":399530,"moduleName":"Module Three: Music Fundamentals Part 2","title":"3.2.6 Lecture 6 Quiz - Rhythm","type":"assignment","dueAt":"2026-06-22T06:59:00Z"},{"moduleId":399530,"moduleName":"Module Three: Music Fundamentals Part 2","title":"3.4.2 Lab Assignment #3 Quiz","type":"assignment","dueAt":"2026-06-22T06:59:00Z"},{"moduleId":399531,"moduleName":"Module Four:  Music Fundamentals Part 3","title":"4.1.1 Discussion #3","type":"discussion","dueAt":"2026-06-29T06:59:00Z"},{"moduleId":399531,"moduleName":"Module Four:  Music Fundamentals Part 3","title":"4.2.6 Lecture 7 Quiz - Form","type":"assignment","dueAt":"2026-06-29T06:59:00Z"},{"moduleId":399531,"moduleName":"Module Four:  Music Fundamentals Part 3","title":"4.2.8 Lecture 8 Quiz - Jazz Ensembles","type":"assignment","dueAt":"2026-06-29T06:59:00Z"},{"moduleId":399531,"moduleName":"Module Four:  Music Fundamentals Part 3","title":"4.2.10 Lecture 9 Quiz - The Soloist and Improvisation","type":"assignment","dueAt":"2026-06-29T06:59:00Z"},{"moduleId":399531,"moduleName":"Module Four:  Music Fundamentals Part 3","title":"4.4.2 Lab Assignment #4 Quiz","type":"assignment","dueAt":"2026-06-29T06:59:00Z"},{"moduleId":399532,"moduleName":"Module Five: Exam #1","title":"5.1.1 Discussion #4","type":"discussion","dueAt":"2026-06-29T06:59:00Z"},{"moduleId":399532,"moduleName":"Module Five: Exam #1","title":"5.2.1 Exam #1","type":"assignment","dueAt":"2026-06-29T06:59:00Z"},{"moduleId":399532,"moduleName":"Module Five: Exam #1","title":"5.3.1 Lab Assignment #5 Quiz","type":"assignment","dueAt":"2026-06-29T06:59:00Z"},{"moduleId":399533,"moduleName":"Module Six: Early Jazz Antecedents","title":"6.1.1 Discussion #5","type":"discussion","dueAt":"2026-06-29T06:59:00Z"},{"moduleId":399533,"moduleName":"Module Six: Early Jazz Antecedents","title":"6.2.2 Lecture 10 Quiz - Jazz Antecedents","type":"assignment","dueAt":"2026-06-29T06:59:00Z"},{"moduleId":399533,"moduleName":"Module Six: Early Jazz Antecedents","title":"6.2.4 Lecture 11 Quiz - Ragtime","type":"assignment","dueAt":"2026-06-29T06:59:00Z"},{"moduleId":399533,"moduleName":"Module Six: Early Jazz Antecedents","title":"6.2.6 Lecture 12 Quiz - Blues","type":"assignment","dueAt":"2026-06-29T06:59:00Z"},{"moduleId":399533,"moduleName":"Module Six: Early Jazz Antecedents","title":"6.4.2 Lab Assignment #6 Quiz","type":"assignment","dueAt":"2026-06-29T06:59:00Z"},{"moduleId":399534,"moduleName":"Module Seven:  Early Jazz","title":"7.1.1 Discussion #6","type":"discussion","dueAt":"2026-07-06T06:59:00Z"},{"moduleId":399534,"moduleName":"Module Seven:  Early Jazz","title":"7.2.2 Lecture 13 Quiz - Harlem Stride","type":"assignment","dueAt":"2026-07-06T06:59:00Z"},{"moduleId":399534,"moduleName":"Module Seven:  Early Jazz","title":"7.2.4 Lecture 14 Quiz - New Orleans Jazz","type":"assignment","dueAt":"2026-07-06T06:59:00Z"},{"moduleId":399534,"moduleName":"Module Seven:  Early Jazz","title":"7.2.6 Lecture 15 Quiz - Chicago Style Jazz","type":"assignment","dueAt":"2026-07-06T06:59:00Z"},{"moduleId":399534,"moduleName":"Module Seven:  Early Jazz","title":"7.4.2 Lab Assignment #7 Quiz","type":"assignment","dueAt":"2026-07-06T06:59:00Z"},{"moduleId":399535,"moduleName":"Module Eight: Exam #2","title":"8.0.1 Discussion #7","type":"discussion","dueAt":"2026-07-06T06:59:00Z"},{"moduleId":399535,"moduleName":"Module Eight: Exam #2","title":"8.2.1 Exam #2","type":"assignment","dueAt":"2026-07-06T06:59:00Z"},{"moduleId":399535,"moduleName":"Module Eight: Exam #2","title":"8.3.2 Lab Assignment #8 Quiz","type":"assignment","dueAt":"2026-07-06T06:59:00Z"},{"moduleId":399536,"moduleName":"Module Nine:  The Swing Era","title":"9.1.1 Discussion #8","type":"discussion","dueAt":"2026-07-06T06:59:00Z"},{"moduleId":399536,"moduleName":"Module Nine:  The Swing Era","title":"9.2.2 Lecture 16 Quiz - The Swing Era","type":"assignment","dueAt":"2026-07-06T06:59:00Z"},{"moduleId":399536,"moduleName":"Module Nine:  The Swing Era","title":"9.2.4 Lecture 17 Quiz - Duke Ellington","type":"assignment","dueAt":"2026-07-06T06:59:00Z"},{"moduleId":399536,"moduleName":"Module Nine:  The Swing Era","title":"9.2.6 Lecture 18 Quiz - Count Basie","type":"assignment","dueAt":"2026-07-06T06:59:00Z"},{"moduleId":399536,"moduleName":"Module Nine:  The Swing Era","title":"9.4.2 Lab Assignment #9 Quiz","type":"assignment","dueAt":"2026-07-06T06:59:00Z"},{"moduleId":399537,"moduleName":"Module Ten: Bebop","title":"10.1.1 Discussion #9","type":"discussion","dueAt":"2026-07-13T06:59:00Z"},{"moduleId":399537,"moduleName":"Module Ten: Bebop","title":"10.2.2 Lecture 19 Quiz - Bebop Introduction","type":"assignment","dueAt":"2026-07-13T06:59:00Z"},{"moduleId":399537,"moduleName":"Module Ten: Bebop","title":"10.2.4 Lecture 20 Quiz - Bebop - Bird and Dizzy","type":"assignment","dueAt":"2026-07-13T06:59:00Z"},{"moduleId":399537,"moduleName":"Module Ten: Bebop","title":"10.2.6 Lecture 21 Quiz - Thelonious Monk","type":"assignment","dueAt":"2026-07-13T06:59:00Z"},{"moduleId":399537,"moduleName":"Module Ten: Bebop","title":"10.4.2 Lab Assignment #10 Quiz","type":"assignment","dueAt":"2026-07-13T06:59:00Z"},{"moduleId":399538,"moduleName":"Module Eleven:  Cool Jazz","title":"11.1.1 Discussion #10","type":"discussion","dueAt":"2026-07-13T06:59:00Z"},{"moduleId":399538,"moduleName":"Module Eleven:  Cool Jazz","title":"11.2.2 Lecture 22 Quiz - Cool Jazz","type":"assignment","dueAt":"2026-07-13T06:59:00Z"},{"moduleId":399538,"moduleName":"Module Eleven:  Cool Jazz","title":"11.2.4 Lecture 23 Quiz - Miles Davis Birth of the Cool","type":"assignment","dueAt":"2026-07-13T06:59:00Z"},{"moduleId":399538,"moduleName":"Module Eleven:  Cool Jazz","title":"11.2.6 Lecture 24 Quiz - Dave Brubeck Take Five","type":"assignment","dueAt":"2026-07-13T06:59:00Z"},{"moduleId":399538,"moduleName":"Module Eleven:  Cool Jazz","title":"11.2.8 - Lecture 25 Quiz - Gerry Mulligan and Chet Baker","type":"assignment","dueAt":"2026-07-13T06:59:00Z"},{"moduleId":399538,"moduleName":"Module Eleven:  Cool Jazz","title":"11.4.2 Lab Assignment #11 Quiz","type":"assignment","dueAt":"2026-07-13T06:59:00Z"},{"moduleId":399539,"moduleName":"Module Twelve: Exam #3","title":"12.0.1 Discussion #11","type":"discussion","dueAt":"2026-07-13T06:59:00Z"},{"moduleId":399539,"moduleName":"Module Twelve: Exam #3","title":"12.1.1 Exam #3","type":"assignment","dueAt":"2026-07-13T06:59:00Z"},{"moduleId":399539,"moduleName":"Module Twelve: Exam #3","title":"12.3.2 Lab Assignment #12 Quiz","type":"assignment","dueAt":"2026-07-13T06:59:00Z"},{"moduleId":399540,"moduleName":"Module Thirteen: Hard Bop","title":"13.0.1 Discussion #12","type":"discussion","dueAt":"2026-07-20T06:59:00Z"},{"moduleId":399540,"moduleName":"Module Thirteen: Hard Bop","title":"13.2.2 Lecture 26 Quiz - Hard Bop","type":"assignment","dueAt":"2026-07-20T06:59:00Z"},{"moduleId":399540,"moduleName":"Module Thirteen: Hard Bop","title":"13.2.4 Lecture 27 Quiz - Art Blakey","type":"assignment","dueAt":"2026-07-20T06:59:00Z"},{"moduleId":399540,"moduleName":"Module Thirteen: Hard Bop","title":"13.2.6 Lecture 28 Quiz - Lee Morgan","type":"assignment","dueAt":"2026-07-20T06:59:00Z"},{"moduleId":399540,"moduleName":"Module Thirteen: Hard Bop","title":"13.2.8 Lecture 29 Quiz - Clifford Brown","type":"assignment","dueAt":"2026-07-20T06:59:00Z"},{"moduleId":399540,"moduleName":"Module Thirteen: Hard Bop","title":"13.4.2 Lab Assignment #13 Quiz","type":"assignment","dueAt":"2026-07-20T06:59:00Z"},{"moduleId":399541,"moduleName":"Module Fourteen:  The 1960s and Beyond","title":"14.0.1 Discussion #13","type":"discussion","dueAt":"2026-07-20T06:59:00Z"},{"moduleId":399541,"moduleName":"Module Fourteen:  The 1960s and Beyond","title":"14.2.2 Lecture 30 Quiz - Modal Jazz","type":"assignment","dueAt":"2026-07-20T06:59:00Z"},{"moduleId":399541,"moduleName":"Module Fourteen:  The 1960s and Beyond","title":"14.2.4 Lecture 31 Quiz - Free Jazz","type":"assignment","dueAt":"2026-07-20T06:59:00Z"},{"moduleId":399541,"moduleName":"Module Fourteen:  The 1960s and Beyond","title":"14.2.6 Lecture 32 Quiz - Jazz and Social Change","type":"assignment","dueAt":"2026-07-20T06:59:00Z"},{"moduleId":399541,"moduleName":"Module Fourteen:  The 1960s and Beyond","title":"14.4.2 Lab Assignment #14 Quiz","type":"assignment","dueAt":"2026-07-20T06:59:00Z"},{"moduleId":399542,"moduleName":"Module Fifteen:  Fusion and Global Directions","title":"15.0.1 Discussion #14","type":"discussion","dueAt":"2026-07-20T06:59:00Z"},{"moduleId":399542,"moduleName":"Module Fifteen:  Fusion and Global Directions","title":"15.2.2 Lecture 33 Quiz - Jazz Fusion","type":"assignment","dueAt":"2026-07-20T06:59:00Z"},{"moduleId":399542,"moduleName":"Module Fifteen:  Fusion and Global Directions","title":"15.2.4 Lecture 34 Quiz - Latin and World Influences","type":"assignment","dueAt":"2026-07-20T06:59:00Z"},{"moduleId":399542,"moduleName":"Module Fifteen:  Fusion and Global Directions","title":"15.2.6 Lecture 35 -Quiz Contemporary Global Jazz - Across Borders","type":"assignment","dueAt":"2026-07-20T06:59:00Z"},{"moduleId":399542,"moduleName":"Module Fifteen:  Fusion and Global Directions","title":"15.4.2 Lab Assignment #15 Quiz","type":"assignment","dueAt":"2026-07-20T06:59:00Z"},{"moduleId":399543,"moduleName":"Module Sixteen: Jazz Now and the Future","title":"16.0.1 Discussion #15","type":"discussion","dueAt":"2026-07-27T06:59:00Z"},{"moduleId":399543,"moduleName":"Module Sixteen: Jazz Now and the Future","title":"16.2.1 Lecture 36 Quiz - Jazz Meets Hip Hop and Popular Culture","type":"assignment","dueAt":"2026-07-27T06:59:00Z"},{"moduleId":399543,"moduleName":"Module Sixteen: Jazz Now and the Future","title":"16.2.4 Lecture 37 Quiz - Women in Jazz Today: Breaking Barriers, Shaping the Future","type":"assignment","dueAt":"2026-07-27T06:59:00Z"},{"moduleId":399543,"moduleName":"Module Sixteen: Jazz Now and the Future","title":"16.4.2 Lab Assignment #16 Quiz","type":"assignment","dueAt":"2026-07-27T06:59:00Z"},{"moduleId":399544,"moduleName":"Module Seventeen: Final Exam","title":"17.1.1 Final Exam","type":"assignment","dueAt":"2026-07-27T06:59:00Z"},{"moduleId":399544,"moduleName":"Module Seventeen: Final Exam","title":"17.1.1 Course Evaluation","type":"assignment","dueAt":"2026-07-27T06:59:00Z"}],"courseName":"Music 8 - Exploring Jazz, Ragtime and Blues","accentColor":"#6e6e6e","textColor":"#ffffff"}</textarea>
+<textarea id="D" style="display:none">{"items":[{"moduleId":399528,"moduleName":"Module One:  Course Orientation and Overview","title":"A4: Module Overview Quiz","type":"assignment","dueAt":"2026-06-22T06:59:00Z"},{"moduleId":399528,"moduleName":"Module One:  Course Orientation and Overview","title":"B4: Canvas Basics Quiz","type":"assignment","dueAt":"2026-06-22T06:59:00Z"},{"moduleId":399528,"moduleName":"Module One:  Course Orientation and Overview","title":"C2:  Discussions Quiz","type":"assignment","dueAt":"2026-06-22T06:59:00Z"},{"moduleId":399528,"moduleName":"Module One:  Course Orientation and Overview","title":"E3:  Lab Assignment #1 Quiz","type":"assignment","dueAt":"2026-06-22T06:59:00Z"},{"moduleId":399529,"moduleName":"Module Two: Music Fundamentals Part 1","title":"2.1.1 Discussion #1","type":"discussion","dueAt":"2026-06-22T06:59:00Z"},{"moduleId":399529,"moduleName":"Module Two: Music Fundamentals Part 1","title":"2.2.2 Lecture 1 Quiz - What Is Jazz?","type":"assignment","dueAt":"2026-06-22T06:59:00Z"},{"moduleId":399529,"moduleName":"Module Two: Music Fundamentals Part 1","title":"2.2.4 Lecture 2 Quiz - Instruments In Jazz Part 1","type":"assignment","dueAt":"2026-06-22T06:59:00Z"},{"moduleId":399529,"moduleName":"Module Two: Music Fundamentals Part 1","title":"2.2.6 Lecture 3 Quiz - Instruments In Jazz Part 2","type":"assignment","dueAt":"2026-06-22T06:59:00Z"},{"moduleId":399529,"moduleName":"Module Two: Music Fundamentals Part 1","title":"2.4.2 Lab Assignment #2 - Quiz","type":"assignment","dueAt":"2026-06-22T06:59:00Z"},{"moduleId":399530,"moduleName":"Module Three: Music Fundamentals Part 2","title":"3.1.1 Discussion #2","type":"discussion","dueAt":"2026-06-22T06:59:00Z"},{"moduleId":399530,"moduleName":"Module Three: Music Fundamentals Part 2","title":"3.2.2 Lecture 4 Quiz - Melody","type":"assignment","dueAt":"2026-06-22T06:59:00Z"},{"moduleId":399530,"moduleName":"Module Three: Music Fundamentals Part 2","title":"3.2.4 Lecture 5 Quiz - Harmony","type":"assignment","dueAt":"2026-06-22T06:59:00Z"},{"moduleId":399530,"moduleName":"Module Three: Music Fundamentals Part 2","title":"3.2.6 Lecture 6 Quiz - Rhythm","type":"assignment","dueAt":"2026-06-22T06:59:00Z"},{"moduleId":399530,"moduleName":"Module Three: Music Fundamentals Part 2","title":"3.4.2 Lab Assignment #3 Quiz","type":"assignment","dueAt":"2026-06-22T06:59:00Z"},{"moduleId":399531,"moduleName":"Module Four:  Music Fundamentals Part 3","title":"4.1.1 Discussion #3","type":"discussion","dueAt":"2026-06-29T06:59:00Z"},{"moduleId":399531,"moduleName":"Module Four:  Music Fundamentals Part 3","title":"4.2.6 Lecture 7 Quiz - Form","type":"assignment","dueAt":"2026-06-29T06:59:00Z"},{"moduleId":399531,"moduleName":"Module Four:  Music Fundamentals Part 3","title":"4.2.8 Lecture 8 Quiz - Jazz Ensembles","type":"assignment","dueAt":"2026-06-29T06:59:00Z"},{"moduleId":399531,"moduleName":"Module Four:  Music Fundamentals Part 3","title":"4.2.10 Lecture 9 Quiz - The Soloist and Improvisation","type":"assignment","dueAt":"2026-06-29T06:59:00Z"},{"moduleId":399531,"moduleName":"Module Four:  Music Fundamentals Part 3","title":"4.4.2 Lab Assignment #4 Quiz","type":"assignment","dueAt":"2026-06-29T06:59:00Z"},{"moduleId":399532,"moduleName":"Module Five: Exam #1","title":"5.1.1 Discussion #4","type":"discussion","dueAt":"2026-06-29T06:59:00Z"},{"moduleId":399532,"moduleName":"Module Five: Exam #1","title":"5.2.1 Exam #1","type":"assignment","dueAt":"2026-06-29T06:59:00Z"},{"moduleId":399532,"moduleName":"Module Five: Exam #1","title":"5.3.1 Lab Assignment #5 Quiz","type":"assignment","dueAt":"2026-06-29T06:59:00Z"},{"moduleId":399533,"moduleName":"Module Six: Early Jazz Antecedents","title":"6.1.1 Discussion #5","type":"discussion","dueAt":"2026-06-29T06:59:00Z"},{"moduleId":399533,"moduleName":"Module Six: Early Jazz Antecedents","title":"6.2.2 Lecture 10 Quiz - Jazz Antecedents","type":"assignment","dueAt":"2026-06-29T06:59:00Z"},{"moduleId":399533,"moduleName":"Module Six: Early Jazz Antecedents","title":"6.2.4 Lecture 11 Quiz - Ragtime","type":"assignment","dueAt":"2026-06-29T06:59:00Z"},{"moduleId":399533,"moduleName":"Module Six: Early Jazz Antecedents","title":"6.2.6 Lecture 12 Quiz - Blues","type":"assignment","dueAt":"2026-06-29T06:59:00Z"},{"moduleId":399533,"moduleName":"Module Six: Early Jazz Antecedents","title":"6.4.2 Lab Assignment #6 Quiz","type":"assignment","dueAt":"2026-06-29T06:59:00Z"},{"moduleId":399534,"moduleName":"Module Seven:  Early Jazz","title":"7.1.1 Discussion #6","type":"discussion","dueAt":"2026-07-06T06:59:00Z"},{"moduleId":399534,"moduleName":"Module Seven:  Early Jazz","title":"7.2.2 Lecture 13 Quiz - Harlem Stride","type":"assignment","dueAt":"2026-07-06T06:59:00Z"},{"moduleId":399534,"moduleName":"Module Seven:  Early Jazz","title":"7.2.4 Lecture 14 Quiz - New Orleans Jazz","type":"assignment","dueAt":"2026-07-06T06:59:00Z"},{"moduleId":399534,"moduleName":"Module Seven:  Early Jazz","title":"7.2.6 Lecture 15 Quiz - Chicago Style Jazz","type":"assignment","dueAt":"2026-07-06T06:59:00Z"},{"moduleId":399534,"moduleName":"Module Seven:  Early Jazz","title":"7.4.2 Lab Assignment #7 Quiz","type":"assignment","dueAt":"2026-07-06T06:59:00Z"},{"moduleId":399535,"moduleName":"Module Eight: Exam #2","title":"8.0.1 Discussion #7","type":"discussion","dueAt":"2026-07-06T06:59:00Z"},{"moduleId":399535,"moduleName":"Module Eight: Exam #2","title":"8.2.1 Exam #2","type":"assignment","dueAt":"2026-07-06T06:59:00Z"},{"moduleId":399535,"moduleName":"Module Eight: Exam #2","title":"8.3.2 Lab Assignment #8 Quiz","type":"assignment","dueAt":"2026-07-06T06:59:00Z"},{"moduleId":399536,"moduleName":"Module Nine:  The Swing Era","title":"9.1.1 Discussion #8","type":"discussion","dueAt":"2026-07-06T06:59:00Z"},{"moduleId":399536,"moduleName":"Module Nine:  The Swing Era","title":"9.2.2 Lecture 16 Quiz - The Swing Era","type":"assignment","dueAt":"2026-07-06T06:59:00Z"},{"moduleId":399536,"moduleName":"Module Nine:  The Swing Era","title":"9.2.4 Lecture 17 Quiz - Duke Ellington","type":"assignment","dueAt":"2026-07-06T06:59:00Z"},{"moduleId":399536,"moduleName":"Module Nine:  The Swing Era","title":"9.2.6 Lecture 18 Quiz - Count Basie","type":"assignment","dueAt":"2026-07-06T06:59:00Z"},{"moduleId":399536,"moduleName":"Module Nine:  The Swing Era","title":"9.4.2 Lab Assignment #9 Quiz","type":"assignment","dueAt":"2026-07-06T06:59:00Z"},{"moduleId":399537,"moduleName":"Module Ten: Bebop","title":"10.1.1 Discussion #9","type":"discussion","dueAt":"2026-07-13T06:59:00Z"},{"moduleId":399537,"moduleName":"Module Ten: Bebop","title":"10.2.2 Lecture 19 Quiz - Bebop Introduction","type":"assignment","dueAt":"2026-07-13T06:59:00Z"},{"moduleId":399537,"moduleName":"Module Ten: Bebop","title":"10.2.4 Lecture 20 Quiz - Bebop - Bird and Dizzy","type":"assignment","dueAt":"2026-07-13T06:59:00Z"},{"moduleId":399537,"moduleName":"Module Ten: Bebop","title":"10.2.6 Lecture 21 Quiz - Thelonious Monk","type":"assignment","dueAt":"2026-07-13T06:59:00Z"},{"moduleId":399537,"moduleName":"Module Ten: Bebop","title":"10.4.2 Lab Assignment #10 Quiz","type":"assignment","dueAt":"2026-07-13T06:59:00Z"},{"moduleId":399538,"moduleName":"Module Eleven:  Cool Jazz","title":"11.1.1 Discussion #10","type":"discussion","dueAt":"2026-07-13T06:59:00Z"},{"moduleId":399538,"moduleName":"Module Eleven:  Cool Jazz","title":"11.2.2 Lecture 22 Quiz - Cool Jazz","type":"assignment","dueAt":"2026-07-13T06:59:00Z"},{"moduleId":399538,"moduleName":"Module Eleven:  Cool Jazz","title":"11.2.4 Lecture 23 Quiz - Miles Davis Birth of the Cool","type":"assignment","dueAt":"2026-07-13T06:59:00Z"},{"moduleId":399538,"moduleName":"Module Eleven:  Cool Jazz","title":"11.2.6 Lecture 24 Quiz - Dave Brubeck Take Five","type":"assignment","dueAt":"2026-07-13T06:59:00Z"},{"moduleId":399538,"moduleName":"Module Eleven:  Cool Jazz","title":"11.2.8 - Lecture 25 Quiz - Gerry Mulligan and Chet Baker","type":"assignment","dueAt":"2026-07-13T06:59:00Z"},{"moduleId":399538,"moduleName":"Module Eleven:  Cool Jazz","title":"11.4.2 Lab Assignment #11 Quiz","type":"assignment","dueAt":"2026-07-13T06:59:00Z"},{"moduleId":399539,"moduleName":"Module Twelve: Exam #3","title":"12.0.1 Discussion #11","type":"discussion","dueAt":"2026-07-13T06:59:00Z"},{"moduleId":399539,"moduleName":"Module Twelve: Exam #3","title":"12.1.1 Exam #3","type":"assignment","dueAt":"2026-07-13T06:59:00Z"},{"moduleId":399539,"moduleName":"Module Twelve: Exam #3","title":"12.3.2 Lab Assignment #12 Quiz","type":"assignment","dueAt":"2026-07-13T06:59:00Z"},{"moduleId":399540,"moduleName":"Module Thirteen: Hard Bop","title":"13.0.1 Discussion #12","type":"discussion","dueAt":"2026-07-20T06:59:00Z"},{"moduleId":399540,"moduleName":"Module Thirteen: Hard Bop","title":"13.2.2 Lecture 26 Quiz - Hard Bop","type":"assignment","dueAt":"2026-07-20T06:59:00Z"},{"moduleId":399540,"moduleName":"Module Thirteen: Hard Bop","title":"13.2.4 Lecture 27 Quiz - Art Blakey","type":"assignment","dueAt":"2026-07-20T06:59:00Z"},{"moduleId":399540,"moduleName":"Module Thirteen: Hard Bop","title":"13.2.6 Lecture 28 Quiz - Lee Morgan","type":"assignment","dueAt":"2026-07-20T06:59:00Z"},{"moduleId":399540,"moduleName":"Module Thirteen: Hard Bop","title":"13.2.8 Lecture 29 Quiz - Clifford Brown","type":"assignment","dueAt":"2026-07-20T06:59:00Z"},{"moduleId":399540,"moduleName":"Module Thirteen: Hard Bop","title":"13.4.2 Lab Assignment #13 Quiz","type":"assignment","dueAt":"2026-07-20T06:59:00Z"},{"moduleId":399541,"moduleName":"Module Fourteen:  The 1960s and Beyond","title":"14.0.1 Discussion #13","type":"discussion","dueAt":"2026-07-20T06:59:00Z"},{"moduleId":399541,"moduleName":"Module Fourteen:  The 1960s and Beyond","title":"14.2.2 Lecture 30 Quiz - Modal Jazz","type":"assignment","dueAt":"2026-07-20T06:59:00Z"},{"moduleId":399541,"moduleName":"Module Fourteen:  The 1960s and Beyond","title":"14.2.4 Lecture 31 Quiz - Free Jazz","type":"assignment","dueAt":"2026-07-20T06:59:00Z"},{"moduleId":399541,"moduleName":"Module Fourteen:  The 1960s and Beyond","title":"14.2.6 Lecture 32 Quiz - Jazz and Social Change","type":"assignment","dueAt":"2026-07-20T06:59:00Z"},{"moduleId":399541,"moduleName":"Module Fourteen:  The 1960s and Beyond","title":"14.4.2 Lab Assignment #14 Quiz","type":"assignment","dueAt":"2026-07-20T06:59:00Z"},{"moduleId":399542,"moduleName":"Module Fifteen:  Fusion and Global Directions","title":"15.0.1 Discussion #14","type":"discussion","dueAt":"2026-07-20T06:59:00Z"},{"moduleId":399542,"moduleName":"Module Fifteen:  Fusion and Global Directions","title":"15.2.2 Lecture 33 Quiz - Jazz Fusion","type":"assignment","dueAt":"2026-07-20T06:59:00Z"},{"moduleId":399542,"moduleName":"Module Fifteen:  Fusion and Global Directions","title":"15.2.4 Lecture 34 Quiz - Latin and World Influences","type":"assignment","dueAt":"2026-07-20T06:59:00Z"},{"moduleId":399542,"moduleName":"Module Fifteen:  Fusion and Global Directions","title":"15.2.6 Lecture 35 -Quiz Contemporary Global Jazz - Across Borders","type":"assignment","dueAt":"2026-07-20T06:59:00Z"},{"moduleId":399542,"moduleName":"Module Fifteen:  Fusion and Global Directions","title":"15.4.2 Lab Assignment #15 Quiz","type":"assignment","dueAt":"2026-07-20T06:59:00Z"},{"moduleId":399543,"moduleName":"Module Sixteen: Jazz Now and the Future","title":"16.0.1 Discussion #15","type":"discussion","dueAt":"2026-07-27T06:59:00Z"},{"moduleId":399543,"moduleName":"Module Sixteen: Jazz Now and the Future","title":"16.2.1 Lecture 36 Quiz - Jazz Meets Hip Hop and Popular Culture","type":"assignment","dueAt":"2026-07-27T06:59:00Z"},{"moduleId":399543,"moduleName":"Module Sixteen: Jazz Now and the Future","title":"16.2.4 Lecture 37 Quiz - Women in Jazz Today: Breaking Barriers, Shaping the Future","type":"assignment","dueAt":"2026-07-27T06:59:00Z"},{"moduleId":399543,"moduleName":"Module Sixteen: Jazz Now and the Future","title":"16.4.2 Lab Assignment #16 Quiz","type":"assignment","dueAt":"2026-07-27T06:59:00Z"},{"moduleId":399544,"moduleName":"Module Seventeen: Final Exam","title":"17.1.1 Final Exam","type":"assignment","dueAt":"2026-07-27T06:59:00Z"},{"moduleId":399544,"moduleName":"Module Seventeen: Final Exam","title":"17.1.1 Course Evaluation","type":"assignment","dueAt":"2026-07-27T06:59:00Z"}],"courseName":"Music 8 - Exploring Jazz, Ragtime and Blues","accentColor":"#6e6e6e","textColor":"#ffffff"}</textarea>
 <script>
-(function() {
-  var raw = document.getElementById("card-data").value;
-  var config = JSON.parse(raw);
-  var ITEMS = config.items;
-  var COURSE_NAME = config.courseName;
-  var ACCENT = config.accentColor;
-  var TEXT_COLOR = config.textColor;
-  var style = document.createElement("style");
-  style.textContent = ".card-header { background:" + ACCENT + "; } .course-name { color:" + TEXT_COLOR + "; } .week-pill { color:" + TEXT_COLOR + "; } .date-range { color:" + TEXT_COLOR + "; } .due-item { border-left:3px solid " + ACCENT + "; }";
-  document.head.appendChild(style);
-  var MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-  var DAYS = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-  function fmtDate(d) { return MONTHS[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear(); }
-  function fmtDateTime(iso) {
-    var d = new Date(iso); var h = d.getHours(), m = d.getMinutes();
-    var ampm = h >= 12 ? "PM" : "AM"; var h12 = h % 12 || 12;
-    var mStr = m === 0 ? "" : ":" + String(m).padStart(2,"0");
-    return DAYS[d.getDay()] + ", " + MONTHS[d.getMonth()] + " " + d.getDate() + " at " + h12 + mStr + " " + ampm;
-  }
-  function getWeekBounds(today) {
-    var d = new Date(today); var day = d.getDay();
-    var diffToMon = day === 0 ? -6 : 1 - day;
-    var mon = new Date(d); mon.setDate(d.getDate() + diffToMon); mon.setHours(0,0,0,0);
-    var sun = new Date(mon); sun.setDate(mon.getDate() + 6); sun.setHours(23,59,59,999);
-    return { mon: mon, sun: sun };
-  }
-  function fmtWeekRange(mon, sun) {
-    if (mon.getMonth() === sun.getMonth()) return MONTHS[mon.getMonth()] + " " + mon.getDate() + "–" + sun.getDate();
-    return MONTHS[mon.getMonth()] + " " + mon.getDate() + " – " + MONTHS[sun.getMonth()] + " " + sun.getDate();
-  }
-  function typeIcon(type) {
-    if (type === "quiz") return "✅";
-    if (type === "discussion") return "💬";
-    return "📝";
-  }
-  function getWeekNumber(today, allDates) {
-    var sorted = allDates.slice().sort(function(a,b){ return new Date(a) - new Date(b); });
-    var first = new Date(sorted[0]); var day = first.getDay();
-    var diffToMon = day === 0 ? -6 : 1 - day;
-    var firstMon = new Date(first); firstMon.setDate(first.getDate() + diffToMon); firstMon.setHours(0,0,0,0);
-    return Math.floor((today.getTime() - firstMon.getTime()) / (7 * 24 * 60 * 60 * 1000)) + 1;
-  }
-  function escHtml(str) {
-    return String(str).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
-  }
-  function render() {
-    var root = document.getElementById("root");
-    var today = new Date();
-    var bounds = getWeekBounds(today);
-    var mon = bounds.mon, sun = bounds.sun;
-    var weekRange = fmtWeekRange(mon, sun);
-    var allDates = ITEMS.map(function(i){ return i.dueAt; });
-    var firstDue = new Date(Math.min.apply(null, allDates.map(function(d){ return new Date(d); })));
-    var lastDue = new Date(Math.max.apply(null, allDates.map(function(d){ return new Date(d); })));
-    if (today < firstDue) {
-      root.innerHTML = "<div class="card-header"><div class="header-left"><span class="course-name">" + escHtml(COURSE_NAME) + "</span></div></div><div class="card-body"><div class="state-card"><div class="icon">📅</div><div class="msg">Course begins soon</div><div class="sub">First item due " + fmtDate(firstDue) + "</div></div></div>";
-      return;
-    }
-    if (today > lastDue) {
-      root.innerHTML = "<div class="card-header"><div class="header-left"><span class="course-name">" + escHtml(COURSE_NAME) + "</span></div></div><div class="card-body"><div class="state-card"><div class="icon">✓</div><div class="msg">Semester complete</div><div class="sub">Great work this semester!</div></div></div>";
-      return;
-    }
-    var weekItems = ITEMS.filter(function(i){ var d = new Date(i.dueAt); return d >= mon && d <= sun; });
-    var weekNum = getWeekNumber(today, allDates);
-    var headerHtml = "<div class="card-header"><div class="header-left"><span class="course-name">" + escHtml(COURSE_NAME) + "</span><span class="week-pill">Week " + weekNum + "</span></div><span class="date-range">" + weekRange + "</span></div>";
-    if (weekItems.length === 0) {
-      root.innerHTML = headerHtml + "<div class="card-body"><div class="nothing-due"><div class="check">✔️</div><div class="msg">Nothing due this week</div><div class="sub">Keep up with your reading and lecture materials</div></div></div>";
-      return;
-    }
-    var byModule = {};
-    weekItems.forEach(function(item){ if (!byModule[item.moduleName]) byModule[item.moduleName] = []; byModule[item.moduleName].push(item); });
-    var moduleNames = Object.keys(byModule);
-    var multiModule = moduleNames.length > 1;
-    var bodyHtml = "<div class="card-body">";
-    moduleNames.forEach(function(modName) {
-      var modItems = byModule[modName];
-      if (multiModule) bodyHtml += "<div class="multi-module">";
-      bodyHtml += "<div class="module-label">" + escHtml(modName) + "</div><div class="items-list">";
-      modItems.forEach(function(item) {
-        bodyHtml += "<div class="due-item"><div class="due-item-icon">" + typeIcon(item.type) + "</div><div class="due-item-text"><div class="due-item-title">" + escHtml(item.title) + "</div><div class="due-item-date">Due " + fmtDateTime(item.dueAt) + "</div></div></div>";
-      });
-      bodyHtml += "</div>";
-      if (multiModule) bodyHtml += "</div>";
-    });
-    bodyHtml += "</div>";
-    root.innerHTML = headerHtml + bodyHtml;
-  }
-  render();
-  function reportHeight() { window.parent.postMessage({ iframeHeight: document.body.scrollHeight }, "*"); }
-  reportHeight();
-  window.addEventListener("resize", reportHeight);
-  setTimeout(reportHeight, 300);
+(function(){
+var cfg=JSON.parse(document.getElementById("D").value);
+var IT=cfg.items,CN=cfg.courseName,AC=cfg.accentColor,TC=cfg.textColor;
+var s=document.createElement("style");
+s.textContent=".ch{background:"+AC+"}.cn{color:"+TC+"}.wp{color:"+TC+"}.dr{color:"+TC+"}.di{border-left:3px solid "+AC+"}";
+document.head.appendChild(s);
+var MO=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+var DA=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+function fd(d){return MO[d.getMonth()]+" "+d.getDate()+", "+d.getFullYear();}
+function fdt(iso){var d=new Date(iso),h=d.getHours(),m=d.getMinutes(),ap=h>=12?"PM":"AM",h1=h%12||12,ms=m===0?"":":"+String(m).padStart(2,"0");return DA[d.getDay()]+", "+MO[d.getMonth()]+" "+d.getDate()+" at "+h1+ms+" "+ap;}
+function wb(t){var d=new Date(t),day=d.getDay(),dm=day===0?-6:1-day,mon=new Date(d);mon.setDate(d.getDate()+dm);mon.setHours(0,0,0,0);var sun=new Date(mon);sun.setDate(mon.getDate()+6);sun.setHours(23,59,59,999);return{mon:mon,sun:sun};}
+function wr(mon,sun){if(mon.getMonth()===sun.getMonth())return MO[mon.getMonth()]+" "+mon.getDate()+"–"+sun.getDate();return MO[mon.getMonth()]+" "+mon.getDate()+" – "+MO[sun.getMonth()]+" "+sun.getDate();}
+function ti(t){return t==="quiz"?"✅":t==="discussion"?"💬":"📝";}
+function wn(t,dd){var s=dd.slice().sort(function(a,b){return new Date(a)-new Date(b);}),f=new Date(s[0]),day=f.getDay(),dm=day===0?-6:1-day,fm=new Date(f);fm.setDate(f.getDate()+dm);fm.setHours(0,0,0,0);return Math.floor((t.getTime()-fm.getTime())/(7*24*60*60*1000))+1;}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function render(){
+  var root=document.getElementById("root"),today=new Date(),b=wb(today),mon=b.mon,sun=b.sun,range=wr(mon,sun);
+  var dd=IT.map(function(i){return i.dueAt;});
+  var fd1=new Date(Math.min.apply(null,dd.map(function(d){return new Date(d);})));
+  var ld=new Date(Math.max.apply(null,dd.map(function(d){return new Date(d);})));
+  var hdr='<div class="ch"><div class="hl"><span class="cn">'+esc(CN)+'</span></div></div>';
+  if(today<fd1){root.innerHTML=hdr+'<div class="cb"><div class="sc"><div class="si">📅</div><div class="sm">Course begins soon</div><div class="ss">First item due '+fd(fd1)+'</div></div></div>';return;}
+  if(today>ld){root.innerHTML=hdr+'<div class="cb"><div class="sc"><div class="si">✓</div><div class="sm">Semester complete</div><div class="ss">Great work this semester!</div></div></div>';return;}
+  var wi=IT.filter(function(i){var d=new Date(i.dueAt);return d>=mon&&d<=sun;});
+  var num=wn(today,dd);
+  var h='<div class="ch"><div class="hl"><span class="cn">'+esc(CN)+'</span><span class="wp">Week '+num+'</span></div><span class="dr">'+range+'</span></div>';
+  if(wi.length===0){root.innerHTML=h+'<div class="cb"><div class="nd">✔️ Nothing due this week</div></div>';return;}
+  var bm={};
+  wi.forEach(function(i){if(!bm[i.moduleName])bm[i.moduleName]=[];bm[i.moduleName].push(i);});
+  var mn=Object.keys(bm),mm=mn.length>1,body='<div class="cb">';
+  mn.forEach(function(n){
+    if(mm)body+='<div class="mm">';
+    body+='<div class="ml">'+esc(n)+'</div><div class="il">';
+    bm[n].forEach(function(i){body+='<div class="di"><div class="dii">'+ti(i.type)+'</div><div class="dit"><div class="dtt">'+esc(i.title)+'</div><div class="dtd">Due '+fdt(i.dueAt)+'</div></div></div>';});
+    body+='</div>';
+    if(mm)body+='</div>';
+  });
+  body+='</div>';
+  root.innerHTML=h+body;
+}
+render();
+function rh(){window.parent.postMessage({iframeHeight:document.body.scrollHeight},"*");}
+rh();window.addEventListener("resize",rh);setTimeout(rh,300);
 })();
 </script>
 </body></html>
