@@ -435,7 +435,7 @@
     H.push('  function fmtDT(iso) {');
     H.push('    var d=new Date(iso),h=d.getHours(),m=d.getMinutes();');
     H.push('    var ap=h>=12?"PM":"AM",h12=h%12||12;');
-    H.push('    var ms=m===0?":"":"+String(m).padStart(2,"0");');
+    H.push('    var ms=m===0?"":":" + String(m).padStart(2,"0");');
     H.push('    return DA[d.getDay()]+", "+MO[d.getMonth()]+"\u00a0"+d.getDate()+" at "+h12+ms+"\u00a0"+ap;');
     H.push('  }');
     H.push('  function getWB(today) {');
