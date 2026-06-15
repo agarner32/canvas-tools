@@ -638,8 +638,9 @@
 <div class="card" id="root">
   <div style="padding:16px; font-size:13px; color:#999; font-family:sans-serif">Loading...</div>
 </div>
+<script type="application/json" id="items-data">${data}</script>
 <script>
-  const ITEMS = ${escaped};
+  const ITEMS = JSON.parse(document.getElementById('items-data').textContent);
   const COURSE_NAME = ${JSON.stringify(courseName)};
   const TEXT_COLOR = ${JSON.stringify(textColor)};
   const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
