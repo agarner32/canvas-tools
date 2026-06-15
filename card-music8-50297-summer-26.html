@@ -52,7 +52,7 @@ function render(){
   var fd1=new Date(Math.min.apply(null,dd.map(function(d){return new Date(d);})));
   var ld=new Date(Math.max.apply(null,dd.map(function(d){return new Date(d);})));
   var hdr='<div class="ch"><div class="hl"><span class="cn">'+esc(CN)+'</span></div></div>';
-  if(today<fd1){root.innerHTML=hdr+'<div class="cb"><div class="sc"><div class="si">📅</div><div class="sm">Course begins soon</div><div class="ss">First item due '+fd(fd1)+'</div></div></div>';return;}
+  var fd1day=fd1.getDay(),fd1diff=fd1day===0?-6:1-fd1day,fd1local=new Date(fd1.getFullYear(),fd1.getMonth(),fd1.getDate()+fd1diff),todayLocal=new Date(today.getFullYear(),today.getMonth(),today.getDate());if(todayLocal<fd1local){root.innerHTML=hdr+'<div class="cb"><div class="sc"><div class="si">📅</div><div class="sm">Course begins soon</div><div class="ss">First item due '+fd(fd1)+'</div></div></div>';return;}
   if(today>ld){root.innerHTML=hdr+'<div class="cb"><div class="sc"><div class="si">✓</div><div class="sm">Semester complete</div><div class="ss">Great work this semester!</div></div></div>';return;}
   var wi=IT.filter(function(i){var d=new Date(i.dueAt);return d>=mon&&d<=sun;});
   var num=wn(today,dd);
