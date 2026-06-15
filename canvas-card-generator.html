@@ -6,248 +6,71 @@
 <title>Canvas Week Card Generator</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
-
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   :root {
-    --navy: #1e2d3d;
-    --navy-light: #2d3f52;
-    --accent: #4a90d9;
-    --accent-soft: #e8f2fb;
-    --success: #2d7a4f;
-    --success-soft: #e6f5ed;
-    --warning: #b45309;
-    --warning-soft: #fef3cd;
-    --danger: #b91c1c;
-    --danger-soft: #fde8e8;
-    --border: #dde3ea;
-    --text: #1a2533;
-    --text-mid: #4a5568;
-    --text-muted: #8896a5;
-    --bg: #f5f7fa;
-    --surface: #ffffff;
-    --radius: 10px;
-    --radius-sm: 6px;
+    --navy: #1e2d3d; --navy-light: #2d3f52; --accent: #4a90d9; --accent-soft: #e8f2fb;
+    --success: #2d7a4f; --success-soft: #e6f5ed; --warning: #b45309; --warning-soft: #fef3cd;
+    --danger: #b91c1c; --danger-soft: #fde8e8; --border: #dde3ea; --text: #1a2533;
+    --text-mid: #4a5568; --text-muted: #8896a5; --bg: #f5f7fa; --surface: #ffffff;
+    --radius: 10px; --radius-sm: 6px;
   }
-
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-  }
-
-  header {
-    background: var(--navy);
-    padding: 20px 32px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
-
-  .header-icon {
-    width: 36px; height: 36px;
-    background: var(--accent);
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px;
-    flex-shrink: 0;
-  }
-
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+  header { background: var(--navy); padding: 20px 32px; display: flex; align-items: center; gap: 14px; }
+  .header-icon { width: 36px; height: 36px; background: var(--accent); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
   header h1 { font-size: 16px; font-weight: 600; color: #fff; }
-  header p  { font-size: 12px; color: #8a9fb5; margin-top: 1px; }
-
-  .main {
-    max-width: 720px;
-    margin: 0 auto;
-    padding: 32px 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-  }
-
-  .card-header {
-    background: #f8fafc;
-    border-bottom: 1px solid var(--border);
-    padding: 13px 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .card-header .step {
-    width: 22px; height: 22px;
-    background: var(--navy);
-    color: #fff;
-    border-radius: 50%;
-    font-size: 11px;
-    font-weight: 600;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
-
+  header p { font-size: 12px; color: #8a9fb5; margin-top: 1px; }
+  .main { max-width: 720px; margin: 0 auto; padding: 32px 24px; display: flex; flex-direction: column; gap: 20px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .card-header { background: #f8fafc; border-bottom: 1px solid var(--border); padding: 13px 20px; display: flex; align-items: center; gap: 10px; }
+  .card-header .step { width: 22px; height: 22px; background: var(--navy); color: #fff; border-radius: 50%; font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .card-header h2 { font-size: 14px; font-weight: 600; color: var(--text); }
-  .card-header .badge {
-    margin-left: auto;
-    font-size: 11px;
-    color: var(--text-muted);
-    background: var(--bg);
-    border: 1px solid var(--border);
-    padding: 2px 8px;
-    border-radius: 20px;
-  }
-
+  .card-header .badge { margin-left: auto; font-size: 11px; color: var(--text-muted); background: var(--bg); border: 1px solid var(--border); padding: 2px 8px; border-radius: 20px; }
   .card-body { padding: 20px; }
-
   .field { margin-bottom: 16px; }
   .field:last-child { margin-bottom: 0; }
-
-  label {
-    display: block;
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--text-mid);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 6px;
-  }
-
-  input[type="text"],
-  input[type="password"],
-  input[type="color"] {
-    padding: 9px 12px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    color: var(--text);
-    background: #fff;
-    outline: none;
-    transition: border-color 0.15s;
-  }
-
+  label { display: block; font-size: 12px; font-weight: 500; color: var(--text-mid); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+  input[type="text"], input[type="password"] { padding: 9px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--text); background: #fff; outline: none; transition: border-color 0.15s; }
   input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(74,144,217,0.12); }
-
   .mono { font-family: 'DM Mono', monospace; font-size: 13px; }
   .hint { font-size: 12px; color: var(--text-muted); margin-top: 5px; line-height: 1.5; }
-
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
-
   .toggle-pw { position: relative; }
   .toggle-pw input { width: 100%; padding-right: 44px; }
-  .toggle-pw button {
-    position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
-    background: none; border: none; cursor: pointer; color: var(--text-muted);
-    font-size: 12px; font-family: 'DM Sans', sans-serif; padding: 0;
-  }
-
-  .btn {
-    padding: 10px 20px;
-    border-radius: var(--radius-sm);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    border: none;
-    transition: all 0.15s;
-  }
-
+  .toggle-pw button { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 12px; font-family: 'DM Sans', sans-serif; padding: 0; }
+  .btn { padding: 10px 20px; border-radius: var(--radius-sm); font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; border: none; transition: all 0.15s; }
   .btn-primary { background: var(--navy); color: #fff; }
   .btn-primary:hover { background: var(--navy-light); }
   .btn-primary:disabled { background: #a0adb8; cursor: not-allowed; }
-
   .btn-accent { background: var(--accent); color: #fff; }
   .btn-accent:hover { background: #3a7bc8; }
   .btn-accent:disabled { background: #a0adb8; cursor: not-allowed; }
-
   .btn-success { background: var(--success); color: #fff; }
   .btn-success:hover { background: #236040; }
   .btn-success:disabled { background: #a0adb8; cursor: not-allowed; }
-
-  .alert {
-    padding: 12px 16px;
-    border-radius: var(--radius-sm);
-    font-size: 13px;
-    line-height: 1.5;
-    display: none;
-  }
-
+  .alert { padding: 12px 16px; border-radius: var(--radius-sm); font-size: 13px; line-height: 1.5; display: none; }
   .alert.show { display: block; }
   .alert-success { background: var(--success-soft); color: var(--success); border: 1px solid #a7d4bb; }
-  .alert-danger  { background: var(--danger-soft);  color: var(--danger);  border: 1px solid #f5c6c6; }
-  .alert-info    { background: var(--accent-soft);  color: #1a4f7a;        border: 1px solid #b3d4f0; }
+  .alert-danger { background: var(--danger-soft); color: var(--danger); border: 1px solid #f5c6c6; }
+  .alert-info { background: var(--accent-soft); color: #1a4f7a; border: 1px solid #b3d4f0; }
   .alert-warning { background: var(--warning-soft); color: var(--warning); border: 1px solid #f5d78a; }
-
-  .spinner {
-    display: inline-block;
-    width: 16px; height: 16px;
-    border: 2px solid var(--border);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-    vertical-align: middle;
-    margin-right: 6px;
-  }
-
+  .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 6px; }
   @keyframes spin { to { transform: rotate(360deg); } }
-
   .progress-wrap { display: none; margin-top: 12px; }
   .progress-wrap.show { display: block; }
   .progress-bar-bg { background: var(--bg); border: 1px solid var(--border); border-radius: 20px; height: 6px; overflow: hidden; margin-bottom: 5px; }
   .progress-bar-fill { height: 100%; background: var(--accent); border-radius: 20px; transition: width 0.3s; width: 0%; }
   .progress-text { font-size: 12px; color: var(--text-muted); }
-
-  .preview-frame-wrap {
-    background: #f0f2f5;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 160px;
-  }
-
-  .preview-empty {
-    text-align: center;
-    color: var(--text-muted);
-    font-size: 13px;
-  }
-
-  .color-options {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-top: 6px;
-  }
-
-  .color-opt {
-    width: 28px; height: 28px;
-    border-radius: 50%;
-    cursor: pointer;
-    border: 3px solid transparent;
-    transition: border-color 0.15s;
-    flex-shrink: 0;
-  }
-
+  .preview-frame-wrap { background: #f0f2f5; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 20px; display: flex; align-items: center; justify-content: center; min-height: 160px; }
+  .preview-empty { text-align: center; color: var(--text-muted); font-size: 13px; }
+  .color-options { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
+  .color-opt { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; transition: border-color 0.15s; flex-shrink: 0; }
   .color-opt.selected { border-color: var(--accent); }
   .color-opt:hover { transform: scale(1.1); }
-
   .actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-
   .filename-input { font-family: 'DM Mono', monospace; font-size: 13px; }
 </style>
 </head>
 <body>
-
 <header>
   <div class="header-icon">🗓️</div>
   <div>
@@ -255,14 +78,9 @@
     <p>Pull your course schedule from Canvas and generate a self-updating homepage card</p>
   </div>
 </header>
-
 <div class="main">
-
   <div class="card">
-    <div class="card-header">
-      <span class="step">1</span>
-      <h2>Canvas connection</h2>
-    </div>
+    <div class="card-header"><span class="step">1</span><h2>Canvas connection</h2></div>
     <div class="card-body">
       <div class="field">
         <label>API Token</label>
@@ -287,15 +105,12 @@
   </div>
 
   <div class="card">
-    <div class="card-header">
-      <span class="step">2</span>
-      <h2>Card settings</h2>
-    </div>
+    <div class="card-header"><span class="step">2</span><h2>Card settings</h2></div>
     <div class="card-body">
       <div class="field">
         <label>Course name (shown on card)</label>
         <input type="text" id="courseName" placeholder="e.g. Music 9 — Music Appreciation" style="width:100%" />
-        <p class="hint">This appears as the card title so students know which course it belongs to.</p>
+        <p class="hint">Appears as the card title. Avoid quotes or apostrophes in the name.</p>
       </div>
       <div class="field">
         <label>Accent color</label>
@@ -306,13 +121,14 @@
           <div class="color-opt" style="background:#7c3bb8" data-color="#7c3bb8" onclick="selectColor(this)" title="Purple"></div>
           <div class="color-opt" style="background:#b45309" data-color="#b45309" onclick="selectColor(this)" title="Amber"></div>
           <div class="color-opt" style="background:#b91c1c" data-color="#b91c1c" onclick="selectColor(this)" title="Red"></div>
+          <div class="color-opt" style="background:#6e6e6e" data-color="#6e6e6e" onclick="selectColor(this)" title="Gray"></div>
           <div class="color-opt" style="background:#0f766e" data-color="#0f766e" onclick="selectColor(this)" title="Teal"></div>
         </div>
         <div style="display:flex; align-items:center; gap:10px; margin-top:10px;">
           <div id="customColorPreview" style="width:28px;height:28px;border-radius:50%;border:2px solid var(--border);background:#1e2d3d;flex-shrink:0;"></div>
-          <input type="text" id="customColor" class="mono" placeholder="Or type a hex code  e.g. #8db48e" style="width:220px;" oninput="applyCustomColor(this.value)" />
+          <input type="text" id="customColor" class="mono" placeholder="Or type a hex code e.g. #8db48e" style="width:220px;" oninput="applyCustomColor(this.value)" />
         </div>
-        <p class="hint">Used for the card header. Pick a preset or enter any hex color code to match your course design.</p>
+        <p class="hint">Used for the card header. Pick a preset or enter any hex color code.</p>
       </div>
       <div class="field" style="margin-top:16px; margin-bottom:0">
         <label>Header text color</label>
@@ -328,11 +144,11 @@
             <input type="text" id="customTextColor" class="mono" placeholder="Or type a hex code" style="width:200px;" oninput="applyCustomTextColor(this.value)" />
           </div>
         </div>
-        <p class="hint">White works well on dark headers. Black is better for accessibility on lighter colors.</p>
+        <p class="hint">White works well on dark headers. Black is better for lighter colors.</p>
       </div>
-      <div class="field" style="margin:0">
+      <div class="field" style="margin:0; margin-top:16px;">
         <label>Output filename</label>
-        <input type="text" id="fileName" class="filename-input" value="card-music9-fall26.html" style="width:100%" />
+        <input type="text" id="fileName" class="filename-input" value="card-course.html" style="width:100%" />
         <p class="hint">This is the filename uploaded to GitHub. Use a clear name so you can tell courses apart.</p>
       </div>
     </div>
@@ -341,13 +157,10 @@
   <div id="alertMain" class="alert"></div>
 
   <div class="card">
-    <div class="card-header">
-      <span class="step">3</span>
-      <h2>Generate card</h2>
-    </div>
+    <div class="card-header"><span class="step">3</span><h2>Generate card</h2></div>
     <div class="card-body">
       <p style="font-size:13px; color:var(--text-mid); margin-bottom:16px; line-height:1.6">
-        Click "Pull from Canvas" to fetch your course data and build the card. This may take a moment depending on how many items your course has.
+        Click "Pull from Canvas" to fetch your course data and build the card.
       </p>
       <div class="actions">
         <button class="btn btn-accent" id="pullBtn" onclick="pullAndGenerate()">Pull from Canvas &amp; generate card</button>
@@ -360,11 +173,7 @@
   </div>
 
   <div class="card" id="previewCard" style="display:none">
-    <div class="card-header">
-      <span class="step">4</span>
-      <h2>Preview &amp; download</h2>
-      <span class="badge" id="itemCount"></span>
-    </div>
+    <div class="card-header"><span class="step">4</span><h2>Preview &amp; download</h2><span class="badge" id="itemCount"></span></div>
     <div class="card-body">
       <p style="font-size:13px; color:var(--text-mid); margin-bottom:14px">
         Here's a preview of what students will see this week. The card updates automatically every week.
@@ -377,11 +186,10 @@
         <code id="iframeSnippet" style="display:block; margin-top:6px; font-family:'DM Mono',monospace; font-size:11px; word-break:break-all;"></code>
       </div>
       <div style="margin-top:14px; padding:12px 14px; background:#fef3cd; border:1px solid #f5d78a; border-radius:6px; font-size:12px; color:#7a5c1e; line-height:1.7">
-        <strong>💡 Height tip:</strong> The default height of <strong>540px</strong> accommodates a full week of assignments. Adjust the number in your Canvas HTML editor as needed:<br>
+        <strong>💡 Height tip:</strong> Adjust height in Canvas HTML editor as needed:<br>
         &bull; <strong>220px</strong> — "Course begins soon" or "Semester complete" states<br>
         &bull; <strong>280px</strong> — Light weeks with 2–3 items<br>
-        &bull; <strong>540px</strong> — Heavy weeks with 7–8 items<br>
-        If content is cut off or a scrollbar appears, simply increase the height number.
+        &bull; <strong>540px</strong> — Heavy weeks with many items
       </div>
       <div class="actions" style="margin-top:16px">
         <button class="btn btn-success" id="downloadBtn" onclick="downloadCard()">⬇ Download card file</button>
@@ -389,7 +197,6 @@
       </div>
     </div>
   </div>
-
 </div>
 
 <script>
@@ -397,8 +204,12 @@
   let selectedColor = '#1e2d3d';
   let selectedTextColor = '#ffffff';
   let generatedCardHtml = '';
-
   const $ = id => document.getElementById(id);
+
+  window.addEventListener('DOMContentLoaded', function() {
+    $('customColor').value = selectedColor;
+    $('customColorPreview').style.background = selectedColor;
+  });
 
   function togglePw() {
     const inp = $('apiToken');
@@ -406,47 +217,34 @@
     event.target.textContent = inp.type === 'password' ? 'Show' : 'Hide';
   }
 
-  window.addEventListener('DOMContentLoaded', function() {
-    const customInput = document.getElementById('customColor');
-    if (customInput) {
-      customInput.value = selectedColor;
-      document.getElementById('customColorPreview').style.background = selectedColor;
-    }
-  });
-
   function selectColor(el) {
     document.querySelectorAll('.color-opt').forEach(e => e.classList.remove('selected'));
     el.classList.add('selected');
     selectedColor = el.dataset.color;
-    const customInput = document.getElementById('customColor');
-    if (customInput) {
-      customInput.value = selectedColor;
-      document.getElementById('customColorPreview').style.background = selectedColor;
-    }
+    $('customColor').value = selectedColor;
+    $('customColorPreview').style.background = selectedColor;
   }
 
   function applyCustomColor(val) {
     const hex = val.trim();
     if (/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(hex)) {
       selectedColor = hex;
-      document.getElementById('customColorPreview').style.background = hex;
+      $('customColorPreview').style.background = hex;
       document.querySelectorAll('.color-opt').forEach(e => e.classList.remove('selected'));
     }
   }
 
   function selectTextColor(val) {
     selectedTextColor = val;
-    const preview = document.getElementById('customTextColorPreview');
-    if (preview) preview.style.background = val;
-    const customInput = document.getElementById('customTextColor');
-    if (customInput) customInput.value = val;
+    $('customTextColorPreview').style.background = val;
+    $('customTextColor').value = val;
   }
 
   function applyCustomTextColor(val) {
     const hex = val.trim();
     if (/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(hex)) {
       selectedTextColor = hex;
-      document.getElementById('customTextColorPreview').style.background = hex;
+      $('customTextColorPreview').style.background = hex;
       document.querySelectorAll('input[name="textColor"]').forEach(r => r.checked = false);
     }
   }
@@ -471,7 +269,6 @@
   function getDomain() { return $('canvasDomain').value.trim(); }
   function getCourse() { return $('courseId').value.trim(); }
 
-  // ── CHANGED: Content-Type replaced with Accept in both fetch functions ──
   async function canvasFetch(path) {
     const url = `https://${getDomain()}${path}`;
     const res = await fetch(`${PROXY}?url=${encodeURIComponent(url)}`, {
@@ -499,10 +296,9 @@
   }
 
   async function pullAndGenerate() {
-    const token    = getToken();
-    const domain   = getDomain();
-    const course   = getCourse();
-    const name     = $('courseName').value.trim() || 'My Course';
+    const token  = getToken();
+    const course = getCourse();
+    const name   = $('courseName').value.trim() || 'My Course';
     const filename = $('fileName').value.trim() || 'course-card.html';
 
     if (!token)  return showAlert('warning', 'Please enter your API token.');
@@ -525,15 +321,12 @@
 
       for (const mod of modules) {
         const items = await canvasFetchAll(`/api/v1/courses/${course}/modules/${mod.id}/items`);
-
         for (const item of items) {
           const type = (item.type || '').toLowerCase();
           if (!['assignment','quiz','discussion','discussiontopic'].includes(type)) continue;
-
           const itemId = item.content_id || item.id;
           let dueAt = null;
-          let normalizedType = type === 'discussiontopic' ? 'discussion' : type;
-
+          const normalizedType = type === 'discussiontopic' ? 'discussion' : type;
           try {
             if (type === 'assignment') {
               const d = await canvasFetch(`/api/v1/courses/${course}/assignments/${itemId}`);
@@ -545,28 +338,19 @@
               const d = await canvasFetch(`/api/v1/courses/${course}/discussion_topics/${itemId}`);
               dueAt = d.assignment ? d.assignment.due_at : null;
             }
-          } catch(e) { /* skip unfetchable items */ }
-
+          } catch(e) { /* skip */ }
           if (dueAt) {
-            allItems.push({
-              moduleId:   mod.id,
-              moduleName: mod.name,
-              title:      item.title,
-              type:       normalizedType,
-              dueAt:      dueAt
-            });
+            allItems.push({ moduleId: mod.id, moduleName: mod.name, title: item.title, type: normalizedType, dueAt });
           }
         }
-
         processed++;
-        const pct = 20 + Math.round((processed / modules.length) * 70);
-        setProgress(pct, `Processing module ${processed} of ${modules.length}...`);
+        setProgress(20 + Math.round((processed / modules.length) * 70), `Processing module ${processed} of ${modules.length}...`);
       }
 
       setProgress(95, 'Building card...');
 
       if (allItems.length === 0) {
-        showAlert('warning', 'No items with due dates found in this course. Make sure your assignments and quizzes have due dates set.');
+        showAlert('warning', 'No items with due dates found. Make sure your assignments have due dates set.');
         btn.disabled = false;
         btn.textContent = 'Pull from Canvas & generate card';
         $('progressWrap').classList.remove('show');
@@ -574,15 +358,13 @@
       }
 
       generatedCardHtml = buildCardHtml(allItems, name, selectedColor, selectedTextColor);
-
       setProgress(100, 'Done!');
       renderPreview(allItems, name, selectedColor, selectedTextColor);
       $('previewCard').style.display = 'block';
       $('itemCount').textContent = `${allItems.length} item${allItems.length !== 1 ? 's' : ''} with due dates`;
-      $('iframeSnippet').textContent = '<iframe src="https://agarner32.github.io/canvas-tools/' + filename + '" width="100%" height="540" frameborder="0" scrolling="no" style="display:block;margin:0 auto;max-width:680px;"></iframe>';
+      $('iframeSnippet').textContent = `<iframe src="https://agarner32.github.io/canvas-tools/${filename}" width="100%" height="540" frameborder="0" scrolling="no" style="display:block;margin:0 auto;max-width:680px;"></iframe>`;
       $('previewCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-      showAlert('success', `✓ Card generated with ${allItems.length} items. Preview below — click "Download card file" when ready.`);
+      showAlert('success', `✓ Card generated with ${allItems.length} items. Click "Download card file" when ready.`);
 
     } catch(e) {
       showAlert('danger', `Failed to fetch course data. Please check your API token and course ID.<br><small>${e.message}</small>`);
@@ -594,189 +376,229 @@
   }
 
   function buildCardHtml(items, courseName, accentColor, textColor) {
-    textColor = textColor || "#ffffff";
-    const data = JSON.stringify(items);
-
+    textColor = textColor || '#ffffff';
+    // Store ALL dynamic data as JSON — completely safe regardless of special characters
+    const payload = JSON.stringify({ items, courseName, accentColor, textColor });
 
     return `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>${escHtml(courseName)} — Week Card</title>
+<title>Week Card</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background:transparent; }
-  .card { background: #ffffff; border: 1px solid #e2e0d8; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); max-width: 680px; }
-  .card-header { background: ${accentColor}; padding: 16px 18px; display: flex; align-items: center; justify-content: center; }
-  .header-left { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; }
-  .course-name { font-size: 18px; font-weight: 600; color: ${textColor}; letter-spacing: 0.2px; text-align: center; }
-  .week-pill { background: rgba(0,0,0,0.15); color: ${textColor}; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 20px; letter-spacing: 0.5px; }
-  .date-range { font-size: 11px; color: ${textColor}; opacity: 0.75; }
-  .card-body { padding: 16px 18px; }
-  .module-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: #9a9a8e; margin-bottom: 10px; }
-  .items-list { display: flex; flex-direction: column; gap: 7px; }
-  .due-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 12px; background: #f8f7f3; border-radius: 6px; border-left: 3px solid ${accentColor}; }
-  .due-item-icon { font-size: 14px; flex-shrink: 0; padding-top: 1px; }
-  .due-item-text { flex: 1; }
-  .due-item-title { font-size: 13px; font-weight: 500; color: #1a1a14; line-height: 1.3; }
-  .due-item-date { font-size: 11px; color: #7a7a6e; margin-top: 2px; }
-  .nothing-due { text-align: center; padding: 16px 12px; color: #9a9a8e; }
-  .nothing-due .check { font-size: 22px; margin-bottom: 6px; }
-  .nothing-due .msg { font-size: 14px; font-weight: 500; color: #5a5a4e; margin-bottom: 3px; }
-  .nothing-due .sub { font-size: 12px; color: #9a9a8e; }
-  .state-card { text-align: center; padding: 20px; }
-  .state-card .icon { font-size: 26px; margin-bottom: 8px; }
-  .state-card .msg { font-size: 15px; font-weight: 500; color: #1a1a14; margin-bottom: 4px; }
-  .state-card .sub { font-size: 12px; color: #9a9a8e; }
-  .multi-module { margin-bottom: 14px; }
-  .multi-module:last-child { margin-bottom: 0; }
-  .multi-module .module-label { margin-bottom: 7px; }
+  body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background:transparent; }
+  .card { background:#fff; border:1px solid #e2e0d8; border-radius:12px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,.06); max-width:680px; }
+  .card-header { padding:16px 18px; display:flex; align-items:center; justify-content:center; }
+  .header-left { display:flex; align-items:center; justify-content:center; gap:10px; width:100%; }
+  .course-name { font-size:18px; font-weight:600; letter-spacing:.2px; text-align:center; }
+  .week-pill { background:rgba(0,0,0,.15); font-size:11px; font-weight:600; padding:3px 9px; border-radius:20px; letter-spacing:.5px; }
+  .date-range { font-size:11px; opacity:.75; }
+  .card-body { padding:16px 18px; }
+  .module-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.8px; color:#9a9a8e; margin-bottom:10px; }
+  .items-list { display:flex; flex-direction:column; gap:7px; }
+  .due-item { display:flex; align-items:flex-start; gap:10px; padding:8px 12px; background:#f8f7f3; border-radius:6px; }
+  .due-item-icon { font-size:14px; flex-shrink:0; padding-top:1px; }
+  .due-item-text { flex:1; }
+  .due-item-title { font-size:13px; font-weight:500; color:#1a1a14; line-height:1.3; }
+  .due-item-date { font-size:11px; color:#7a7a6e; margin-top:2px; }
+  .nothing-due { text-align:center; padding:16px 12px; color:#9a9a8e; }
+  .nothing-due .check { font-size:22px; margin-bottom:6px; }
+  .nothing-due .msg { font-size:14px; font-weight:500; color:#5a5a4e; margin-bottom:3px; }
+  .nothing-due .sub { font-size:12px; }
+  .state-card { text-align:center; padding:20px; }
+  .state-card .icon { font-size:26px; margin-bottom:8px; }
+  .state-card .msg { font-size:15px; font-weight:500; color:#1a1a14; margin-bottom:4px; }
+  .state-card .sub { font-size:12px; color:#9a9a8e; }
+  .multi-module { margin-bottom:14px; }
+  .multi-module:last-child { margin-bottom:0; }
+  .multi-module .module-label { margin-bottom:7px; }
 </style>
 </head>
 <body>
 <div class="card" id="root">
-  <div style="padding:16px; font-size:13px; color:#999; font-family:sans-serif">Loading...</div>
+  <div style="padding:16px;font-size:13px;color:#999">Loading...</div>
 </div>
-<script type="application/json" id="items-data">${data}</script>
+<script type="application/json" id="card-data">${payload}</script>
 <script>
-  const ITEMS = JSON.parse(document.getElementById('items-data').textContent);
-  const COURSE_NAME = ${JSON.stringify(courseName)};
-  const TEXT_COLOR = ${JSON.stringify(textColor)};
-  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const DAYS_LONG = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-  function fmtDate(d) { return MONTHS[d.getMonth()] + '\\u00a0' + d.getDate() + ', ' + d.getFullYear(); }
+(function() {
+  var raw = document.getElementById('card-data').textContent;
+  var config = JSON.parse(raw);
+  var ITEMS = config.items;
+  var COURSE_NAME = config.courseName;
+  var ACCENT = config.accentColor;
+  var TEXT_COLOR = config.textColor;
+
+  // Apply dynamic CSS that depends on accent/text color
+  var style = document.createElement('style');
+  style.textContent = '.card-header { background:' + ACCENT + '; } .course-name { color:' + TEXT_COLOR + '; } .week-pill { color:' + TEXT_COLOR + '; } .date-range { color:' + TEXT_COLOR + '; } .due-item { border-left:3px solid ' + ACCENT + '; }';
+  document.head.appendChild(style);
+
+  var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+  function fmtDate(d) { return MONTHS[d.getMonth()] + '\u00a0' + d.getDate() + ', ' + d.getFullYear(); }
+
   function fmtDateTime(iso) {
-    const d = new Date(iso);
-    const h = d.getHours(); const m = d.getMinutes();
-    const ampm = h >= 12 ? 'PM' : 'AM';
-    const h12 = h % 12 || 12;
-    const mStr = m === 0 ? '' : ':' + String(m).padStart(2,'0');
-    return DAYS_LONG[d.getDay()] + ', ' + MONTHS[d.getMonth()] + '\\u00a0' + d.getDate() + ' at ' + h12 + mStr + '\\u00a0' + ampm;
+    var d = new Date(iso);
+    var h = d.getHours(), m = d.getMinutes();
+    var ampm = h >= 12 ? 'PM' : 'AM';
+    var h12 = h % 12 || 12;
+    var mStr = m === 0 ? '' : ':' + String(m).padStart(2,'0');
+    return DAYS[d.getDay()] + ', ' + MONTHS[d.getMonth()] + '\u00a0' + d.getDate() + ' at ' + h12 + mStr + '\u00a0' + ampm;
   }
+
   function getWeekBounds(today) {
-    const d = new Date(today);
-    const day = d.getDay();
-    const diffToMon = day === 0 ? -6 : 1 - day;
-    const mon = new Date(d); mon.setDate(d.getDate() + diffToMon); mon.setHours(0,0,0,0);
-    const sun = new Date(mon); sun.setDate(mon.getDate() + 6); sun.setHours(23,59,59,999);
-    return { mon, sun };
+    var d = new Date(today);
+    var day = d.getDay();
+    var diffToMon = day === 0 ? -6 : 1 - day;
+    var mon = new Date(d); mon.setDate(d.getDate() + diffToMon); mon.setHours(0,0,0,0);
+    var sun = new Date(mon); sun.setDate(mon.getDate() + 6); sun.setHours(23,59,59,999);
+    return { mon: mon, sun: sun };
   }
+
   function fmtWeekRange(mon, sun) {
-    if (mon.getMonth() === sun.getMonth()) return MONTHS[mon.getMonth()] + '\\u00a0' + mon.getDate() + '\\u2013' + sun.getDate();
-    return MONTHS[mon.getMonth()] + '\\u00a0' + mon.getDate() + ' \\u2013 ' + MONTHS[sun.getMonth()] + '\\u00a0' + sun.getDate();
+    if (mon.getMonth() === sun.getMonth()) return MONTHS[mon.getMonth()] + '\u00a0' + mon.getDate() + '\u2013' + sun.getDate();
+    return MONTHS[mon.getMonth()] + '\u00a0' + mon.getDate() + ' \u2013 ' + MONTHS[sun.getMonth()] + '\u00a0' + sun.getDate();
   }
+
   function typeIcon(type) {
-    if (type === 'quiz') return '\\u2705';
-    if (type === 'discussion') return '\\uD83D\\uDCAC';
-    return '\\uD83D\\uDCDD';
+    if (type === 'quiz') return '\u2705';
+    if (type === 'discussion') return '\uD83D\uDCAC';
+    return '\uD83D\uDCDD';
   }
+
   function getWeekNumber(today, allDates) {
-    const sorted = [...allDates].sort((a,b) => new Date(a) - new Date(b));
-    const first = new Date(sorted[0]);
-    const day = first.getDay();
-    const diffToMon = day === 0 ? -6 : 1 - day;
-    const firstMon = new Date(first); firstMon.setDate(first.getDate() + diffToMon); firstMon.setHours(0,0,0,0);
-    const ms = today.getTime() - firstMon.getTime();
-    return Math.floor(ms / (7 * 24 * 60 * 60 * 1000)) + 1;
+    var sorted = allDates.slice().sort(function(a,b){ return new Date(a) - new Date(b); });
+    var first = new Date(sorted[0]);
+    var day = first.getDay();
+    var diffToMon = day === 0 ? -6 : 1 - day;
+    var firstMon = new Date(first); firstMon.setDate(first.getDate() + diffToMon); firstMon.setHours(0,0,0,0);
+    return Math.floor((today.getTime() - firstMon.getTime()) / (7 * 24 * 60 * 60 * 1000)) + 1;
   }
+
+  function escHtml(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
   function render() {
-    const root = document.getElementById('root');
-    const today = new Date();
-    const { mon, sun } = getWeekBounds(today);
-    const weekRange = fmtWeekRange(mon, sun);
-    const allDates = ITEMS.map(i => i.dueAt);
-    const firstDue = new Date(Math.min(...allDates.map(d => new Date(d))));
-    const lastDue  = new Date(Math.max(...allDates.map(d => new Date(d))));
+    var root = document.getElementById('root');
+    var today = new Date();
+    var bounds = getWeekBounds(today);
+    var mon = bounds.mon, sun = bounds.sun;
+    var weekRange = fmtWeekRange(mon, sun);
+    var allDates = ITEMS.map(function(i){ return i.dueAt; });
+    var firstDue = new Date(Math.min.apply(null, allDates.map(function(d){ return new Date(d); })));
+    var lastDue  = new Date(Math.max.apply(null, allDates.map(function(d){ return new Date(d); })));
+
     if (today < firstDue) {
-      root.innerHTML = \`<div class="card-header"><div class="header-left"><span class="course-name">\${COURSE_NAME}</span></div></div><div class="card-body"><div class="state-card"><div class="icon">\\uD83D\\uDCC5</div><div class="msg">Course begins soon</div><div class="sub">First item due \${fmtDate(firstDue)}</div></div></div>\`;
+      root.innerHTML = '<div class="card-header"><div class="header-left"><span class="course-name">' + escHtml(COURSE_NAME) + '</span></div></div><div class="card-body"><div class="state-card"><div class="icon">\uD83D\uDCC5</div><div class="msg">Course begins soon</div><div class="sub">First item due ' + fmtDate(firstDue) + '</div></div></div>';
       return;
     }
+
     if (today > lastDue) {
-      root.innerHTML = \`<div class="card-header"><div class="header-left"><span class="course-name">\${COURSE_NAME}</span></div></div><div class="card-body"><div class="state-card"><div class="icon">\\u2713</div><div class="msg">Semester complete</div><div class="sub">Great work this semester!</div></div></div>\`;
+      root.innerHTML = '<div class="card-header"><div class="header-left"><span class="course-name">' + escHtml(COURSE_NAME) + '</span></div></div><div class="card-body"><div class="state-card"><div class="icon">\u2713</div><div class="msg">Semester complete</div><div class="sub">Great work this semester!</div></div></div>';
       return;
     }
-    const weekItems = ITEMS.filter(i => { const d = new Date(i.dueAt); return d >= mon && d <= sun; });
-    const weekNum = getWeekNumber(today, allDates);
-    const headerHtml = \`<div class="card-header"><div class="header-left"><span class="course-name">\${COURSE_NAME}</span><span class="week-pill">Week \${weekNum}</span></div><span class="date-range">\${weekRange}</span></div>\`;
+
+    var weekItems = ITEMS.filter(function(i){ var d = new Date(i.dueAt); return d >= mon && d <= sun; });
+    var weekNum = getWeekNumber(today, allDates);
+    var headerHtml = '<div class="card-header"><div class="header-left"><span class="course-name">' + escHtml(COURSE_NAME) + '</span><span class="week-pill">Week ' + weekNum + '</span></div><span class="date-range">' + weekRange + '</span></div>';
+
     if (weekItems.length === 0) {
-      root.innerHTML = headerHtml + \`<div class="card-body"><div class="nothing-due"><div class="check">\\u2714\\uFE0F</div><div class="msg">Nothing due this week</div><div class="sub">Keep up with your reading and lecture materials</div></div></div>\`;
+      root.innerHTML = headerHtml + '<div class="card-body"><div class="nothing-due"><div class="check">\u2714\uFE0F</div><div class="msg">Nothing due this week</div><div class="sub">Keep up with your reading and lecture materials</div></div></div>';
       return;
     }
-    const byModule = {};
-    weekItems.forEach(item => { if (!byModule[item.moduleName]) byModule[item.moduleName] = []; byModule[item.moduleName].push(item); });
-    const moduleNames = Object.keys(byModule);
-    const multiModule = moduleNames.length > 1;
-    let bodyHtml = '<div class="card-body">';
-    moduleNames.forEach(modName => {
-      const modItems = byModule[modName];
-      if (multiModule) bodyHtml += \`<div class="multi-module">\`;
-      bodyHtml += \`<div class="module-label">\${modName}</div><div class="items-list">\`;
-      modItems.forEach(item => {
-        bodyHtml += \`<div class="due-item"><div class="due-item-icon">\${typeIcon(item.type)}</div><div class="due-item-text"><div class="due-item-title">\${item.title}</div><div class="due-item-date">Due \${fmtDateTime(item.dueAt)}</div></div></div>\`;
+
+    var byModule = {};
+    weekItems.forEach(function(item){ if (!byModule[item.moduleName]) byModule[item.moduleName] = []; byModule[item.moduleName].push(item); });
+    var moduleNames = Object.keys(byModule);
+    var multiModule = moduleNames.length > 1;
+    var bodyHtml = '<div class="card-body">';
+    moduleNames.forEach(function(modName) {
+      var modItems = byModule[modName];
+      if (multiModule) bodyHtml += '<div class="multi-module">';
+      bodyHtml += '<div class="module-label">' + escHtml(modName) + '</div><div class="items-list">';
+      modItems.forEach(function(item) {
+        bodyHtml += '<div class="due-item"><div class="due-item-icon">' + typeIcon(item.type) + '</div><div class="due-item-text"><div class="due-item-title">' + escHtml(item.title) + '</div><div class="due-item-date">Due ' + fmtDateTime(item.dueAt) + '</div></div></div>';
       });
-      bodyHtml += \`</div>\`;
-      if (multiModule) bodyHtml += \`</div>\`;
+      bodyHtml += '</div>';
+      if (multiModule) bodyHtml += '</div>';
     });
     bodyHtml += '</div>';
     root.innerHTML = headerHtml + bodyHtml;
   }
+
   render();
+
   function reportHeight() { window.parent.postMessage({ iframeHeight: document.body.scrollHeight }, '*'); }
   reportHeight();
   window.addEventListener('resize', reportHeight);
   setTimeout(reportHeight, 300);
-<\/script>
+})();
+</script>
 </body>
 </html>`;
   }
 
   function renderPreview(items, courseName, accentColor, textColor) {
-    textColor = textColor || "#ffffff";
-    const today = new Date();
+    textColor = textColor || '#ffffff';
     const wrap = $('previewWrap');
-    const mon = getMondayOf(today);
+    const today = new Date();
+    const day = today.getDay();
+    const diffToMon = day === 0 ? -6 : 1 - day;
+    const mon = new Date(today); mon.setDate(today.getDate() + diffToMon); mon.setHours(0,0,0,0);
     const sun = new Date(mon); sun.setDate(mon.getDate() + 6); sun.setHours(23,59,59,999);
     const weekItems = items.filter(i => { const d = new Date(i.dueAt); return d >= mon && d <= sun; });
     const previewItems = weekItems.length > 0 ? weekItems : items.slice(0, 3);
     const label = weekItems.length > 0 ? 'This week' : 'Sample (showing first items)';
     const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
     function fmtDT(iso) {
       const d = new Date(iso);
-      const h = d.getHours(); const m = d.getMinutes();
+      const h = d.getHours(), m = d.getMinutes();
       const ampm = h >= 12 ? 'PM' : 'AM';
       const h12 = h % 12 || 12;
       const mStr = m === 0 ? '' : ':' + String(m).padStart(2,'0');
       return DAYS[d.getDay()] + ', ' + MONTHS[d.getMonth()] + '\u00a0' + d.getDate() + ' at ' + h12 + mStr + '\u00a0' + ampm;
     }
+
     function typeIcon(type) {
       if (type === 'quiz') return '✅';
       if (type === 'discussion') return '💬';
       return '📝';
     }
-    let itemsHtml = '';
-    if (previewItems.length === 0) {
-      itemsHtml = `<div style="text-align:center;padding:16px;color:#9a9a8e;font-size:13px;">✔️ <strong style="display:block;color:#5a5a4e">Nothing due this week</strong><span style="font-size:12px">Keep up with your reading and lecture materials</span></div>`;
-    } else {
-      previewItems.forEach(item => {
-        itemsHtml += `<div style="display:flex;align-items:flex-start;gap:10px;padding:8px 12px;background:#f8f7f3;border-radius:6px;border-left:3px solid ${accentColor};margin-bottom:6px"><span style="font-size:14px;flex-shrink:0;padding-top:1px">${typeIcon(item.type)}</span><div><div style="font-size:13px;font-weight:500;color:#1a1a14;line-height:1.3">${escHtml(item.title)}</div><div style="font-size:11px;color:#7a7a6e;margin-top:2px">Due ${fmtDT(item.dueAt)}</div></div></div>`;
-      });
+
+    function escHtml(str) {
+      return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
-    wrap.innerHTML = `<div style="background:#fff;border:1px solid #e2e0d8;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06);width:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"><div style="background:${accentColor};padding:16px 18px;display:flex;align-items:center;justify-content:space-between"><div style="display:flex;align-items:center;gap:10px"><span style="font-size:18px;font-weight:600;color:${textColor}">${escHtml(courseName)}</span><span style="background:rgba(255,255,255,0.2);color:#fff;font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px">Week Card Preview</span></div><span style="font-size:11px;color:rgba(255,255,255,0.65)">${label}</span></div><div style="padding:16px 18px"><div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;color:#9a9a8e;margin-bottom:10px">${previewItems.length > 0 ? (previewItems[0].moduleName || 'This Week') : 'This Week'}</div>${itemsHtml}</div></div>`;
-  }
 
-  function getMondayOf(d) {
-    const r = new Date(d);
-    const day = r.getDay();
-    const diff = day === 0 ? -6 : 1 - day;
-    r.setDate(r.getDate() + diff);
-    r.setHours(0,0,0,0);
-    return r;
-  }
+    let itemsHtml = '';
+    previewItems.forEach(item => {
+      itemsHtml += `<div style="display:flex;align-items:flex-start;gap:10px;padding:8px 12px;background:#f8f7f3;border-radius:6px;border-left:3px solid ${accentColor};margin-bottom:6px">
+        <span style="font-size:14px;flex-shrink:0;padding-top:1px">${typeIcon(item.type)}</span>
+        <div>
+          <div style="font-size:13px;font-weight:500;color:#1a1a14;line-height:1.3">${escHtml(item.title)}</div>
+          <div style="font-size:11px;color:#7a7a6e;margin-top:2px">Due ${fmtDT(item.dueAt)}</div>
+        </div>
+      </div>`;
+    });
 
-  function escHtml(str) {
-    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    wrap.innerHTML = `<div style="background:#fff;border:1px solid #e2e0d8;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06);width:100%;font-family:-apple-system,sans-serif">
+      <div style="background:${accentColor};padding:16px 18px;display:flex;align-items:center;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:18px;font-weight:600;color:${textColor}">${escHtml(courseName)}</span>
+          <span style="background:rgba(255,255,255,0.2);color:#fff;font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px">Week Card Preview</span>
+        </div>
+        <span style="font-size:11px;color:rgba(255,255,255,0.65)">${label}</span>
+      </div>
+      <div style="padding:16px 18px">
+        <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;color:#9a9a8e;margin-bottom:10px">${previewItems.length > 0 ? escHtml(previewItems[0].moduleName || 'This Week') : 'This Week'}</div>
+        ${itemsHtml}
+      </div>
+    </div>`;
   }
 
   function downloadCard() {
