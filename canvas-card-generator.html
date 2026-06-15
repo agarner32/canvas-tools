@@ -596,7 +596,7 @@
   function buildCardHtml(items, courseName, accentColor, textColor) {
     textColor = textColor || "#ffffff";
     const data = JSON.stringify(items);
-    const escaped = data.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/"/g, '\\"');
+
 
     return `<!DOCTYPE html>
 <html lang="en">
